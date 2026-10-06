@@ -21,6 +21,11 @@ export function toLocalDigits(n: number | string, system: NumeralSystem = 'latn'
   return String(n).replace(/\d/g, (d) => map[parseInt(d, 10)]);
 }
 
+// Chevron SVGs
+export const CHEVRON_LEFT_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>`;
+export const CHEVRON_RIGHT_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l6-6-6-6"/></svg>`;
+export const CALENDAR_ICON_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+
 export function createCalendarCellElement(
   cell: CalendarCell,
   locale: LocaleConfig,
@@ -38,7 +43,7 @@ export function createCalendarCellElement(
     el.setAttribute('aria-selected', 'false');
   }
 
-  if (cell.isToday && !cell.isSelected) {
+  if (cell.isToday) {
     el.classList.add('dp-day--today');
   }
 
@@ -144,30 +149,60 @@ export function createTimePicker(
   let isPM = hour >= 12;
   let displayHour = is12h ? hour % 12 || 12 : hour;
 
-  // Hour input
+  // Hour stepper
+  const hourStepper = document.createElement('div');
+  hourStepper.className = 'dp-time-stepper';
+
   const hourInput = document.createElement('input');
-  hourInput.type = 'number';
+  hourInput.type = 'text';
   hourInput.className = 'dp-time-input dp-time-hour';
-  hourInput.min = is12h ? '1' : '0';
-  hourInput.max = is12h ? '12' : '23';
   hourInput.value = String(displayHour).padStart(2, '0');
+
+  const btnHourUp = document.createElement('button');
+  btnHourUp.type = 'button';
+  btnHourUp.className = 'dp-time-btn';
+  btnHourUp.innerHTML = '+';
+
+  const btnHourDown = document.createElement('button');
+  btnHourDown.type = 'button';
+  btnHourDown.className = 'dp-time-btn';
+  btnHourDown.innerHTML = '−';
+
+  hourStepper.appendChild(btnHourDown);
+  hourStepper.appendChild(hourInput);
+  hourStepper.appendChild(btnHourUp);
 
   // Separator
   const sep = document.createElement('span');
   sep.className = 'dp-time-sep';
   sep.textContent = ':';
 
-  // Minute input
+  // Minute stepper
+  const minStepper = document.createElement('div');
+  minStepper.className = 'dp-time-stepper';
+
   const minInput = document.createElement('input');
-  minInput.type = 'number';
+  minInput.type = 'text';
   minInput.className = 'dp-time-input dp-time-minute';
-  minInput.min = '0';
-  minInput.max = '59';
   minInput.value = String(minute).padStart(2, '0');
+
+  const btnMinUp = document.createElement('button');
+  btnMinUp.type = 'button';
+  btnMinUp.className = 'dp-time-btn';
+  btnMinUp.innerHTML = '+';
+
+  const btnMinDown = document.createElement('button');
+  btnMinDown.type = 'button';
+  btnMinDown.className = 'dp-time-btn';
+  btnMinDown.innerHTML = '−';
+
+  minStepper.appendChild(btnMinDown);
+  minStepper.appendChild(minInput);
+  minStepper.appendChild(btnMinUp);
 
   const emit = () => {
     let h = parseInt(hourInput.value, 10) || 0;
-    const m = parseInt(minInput.value, 10) || 0;
+    let m = parseInt(minInput.value, 10) || 0;
     if (is12h) {
       if (isPM && h < 12) h += 12;
       if (!isPM && h === 12) h = 0;
@@ -175,12 +210,41 @@ export function createTimePicker(
     onChange(Math.max(0, Math.min(23, h)), Math.max(0, Math.min(59, m)));
   };
 
-  hourInput.addEventListener('change', emit);
-  minInput.addEventListener('change', emit);
+  btnHourUp.addEventListener('click', (e) => {
+    e.stopPropagation();
+    let h = parseInt(hourInput.value, 10) || 0;
+    h = is12h ? (h % 12) + 1 : (h + 1) % 24;
+    hourInput.value = String(h).padStart(2, '0');
+    emit();
+  });
 
-  container.appendChild(hourInput);
+  btnHourDown.addEventListener('click', (e) => {
+    e.stopPropagation();
+    let h = parseInt(hourInput.value, 10) || 0;
+    h = is12h ? (h <= 1 ? 12 : h - 1) : (h <= 0 ? 23 : h - 1);
+    hourInput.value = String(h).padStart(2, '0');
+    emit();
+  });
+
+  btnMinUp.addEventListener('click', (e) => {
+    e.stopPropagation();
+    let m = (parseInt(minInput.value, 10) || 0) + 5;
+    if (m >= 60) m = 0;
+    minInput.value = String(m).padStart(2, '0');
+    emit();
+  });
+
+  btnMinDown.addEventListener('click', (e) => {
+    e.stopPropagation();
+    let m = (parseInt(minInput.value, 10) || 0) - 5;
+    if (m < 0) m = 55;
+    minInput.value = String(m).padStart(2, '0');
+    emit();
+  });
+
+  container.appendChild(hourStepper);
   container.appendChild(sep);
-  container.appendChild(minInput);
+  container.appendChild(minStepper);
 
   if (is12h) {
     const ampmBtn = document.createElement('button');
@@ -203,6 +267,7 @@ export function createOverlay(trigger: HTMLElement): HTMLElement {
   const overlay = document.createElement('div');
   overlay.className = 'dp-overlay';
   overlay.setAttribute('aria-hidden', 'true');
+  overlay.style.display = 'none';
   return overlay;
 }
 
@@ -214,6 +279,13 @@ export function createPopup(container: HTMLElement, zIndex: number): HTMLElement
   popup.setAttribute('aria-label', 'Date picker');
   popup.setAttribute('tabindex', '-1');
   popup.style.zIndex = String(zIndex);
+  popup.style.display = 'none';
+
+  // Mobile drag handle
+  const handle = document.createElement('div');
+  handle.className = 'dp-drag-handle';
+  popup.appendChild(handle);
+
   container.appendChild(popup);
   return popup;
 }
@@ -222,6 +294,7 @@ export function applyTheme(el: HTMLElement, theme: Theme = 'light'): void {
   el.classList.remove(
     'dp-theme-light',
     'dp-theme-dark',
+    'dp-theme-auto',
     'dp-theme-material',
     'dp-theme-ios',
     'dp-theme-glass'
@@ -248,4 +321,9 @@ export function applyLayout(el: HTMLElement, layout: Layout = 'popup'): void {
 export function applyDirection(popup: HTMLElement, direction: 'ltr' | 'rtl'): void {
   popup.setAttribute('dir', direction);
   popup.style.direction = direction;
+  if (direction === 'rtl') {
+    popup.classList.add('dp-rtl');
+  } else {
+    popup.classList.remove('dp-rtl');
+  }
 }

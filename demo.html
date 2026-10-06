@@ -96,10 +96,19 @@
   const dpJalali = new DatePicker('#dp-jalali', {
     calendar: 'jalali',
     calendarSwitcher: true,
+    value: new Date(),
     pattern: 'l j F Y',
   });
+  const updateJalaliDisplay = (val) => {
+    const el = document.getElementById('val-jalali');
+    if (el) el.textContent = val ? JSON.stringify(val) : '—';
+  };
+  updateJalaliDisplay(dpJalali.getValue());
   dpJalali.on('change', ({ value }) => {
-    document.getElementById('val-jalali').textContent = JSON.stringify(value);
+    updateJalaliDisplay(value);
+  });
+  dpJalali.on('calendar-change', () => {
+    updateJalaliDisplay(dpJalali.getValue());
   });
 
   const dpRange = new DatePicker('#dp-range', {

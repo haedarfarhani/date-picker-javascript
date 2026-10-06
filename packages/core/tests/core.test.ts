@@ -180,5 +180,47 @@ describe('DatePicker Core', () => {
       expect(container.querySelector('.dp-theme-dark')).not.toBeNull();
       dp.destroy();
     });
+
+    it('should stay open and preserve date when switching calendars', () => {
+      const dp = new DatePicker(container, {
+        calendar: 'jalali',
+        calendarSwitcher: true,
+        value: '1403/07/14',
+      });
+      dp.open();
+      expect(container.querySelector('.dp-popup')?.style.display).toBe('block');
+
+      // Switch to gregorian
+      dp.switchCalendar('gregorian');
+      // Must stay open!
+      expect(container.querySelector('.dp-popup')?.style.display).toBe('block');
+      // Value must not be null!
+      expect(dp.getValue()).not.toBeNull();
+      expect(typeof dp.getValue()).toBe('string');
+
+      // Switch to hijri
+      dp.switchCalendar('hijri');
+      expect(container.querySelector('.dp-popup')?.style.display).toBe('block');
+      expect(dp.getValue()).not.toBeNull();
+
+      dp.destroy();
+    });
+
+    it('should not emit null change on empty datepicker when switching calendars', () => {
+      const dp = new DatePicker(container, {
+        calendar: 'jalali',
+        calendarSwitcher: true,
+      });
+      dp.open();
+
+      const changes: any[] = [];
+      dp.on('change', (payload) => changes.push(payload));
+
+      dp.switchCalendar('gregorian');
+      expect(changes.length).toBe(0);
+      expect(container.querySelector('.dp-popup')?.style.display).toBe('block');
+
+      dp.destroy();
+    });
   });
 });
