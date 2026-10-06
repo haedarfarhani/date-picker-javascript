@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Persian Datepicker v3 & SmartDate — نمایش کامل</title>
+  <meta name="description" content="کتابخانه تاریخ و دیت‌پیکر جامع شمسی، میلادی و قمری با کلاس SmartDate و پشتیبانی از ری‌اکت، ویو و وانیلا" />
+
+  <!-- Vazirmatn Persian Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Datepicker Stylesheet -->
+  <link rel="stylesheet" href="/packages/core/styles/datepicker.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --primary: #1976d2;
+      --primary-dark: #115293;
+      --primary-light: #e3f2fd;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 20px -2px rgba(0,0,0,0.06), 0 2px 6px -1px rgba(0,0,0,0.04);
+    }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      direction: rtl;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+      color: #fff;
+      padding: 40px 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin: 0 auto;
+      max-width: 680px;
+      font-size: 1.05rem;
+      opacity: 0.92;
+      font-weight: 300;
+    }
+
+    .badge-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* Top live clock card */
+    .top-sync-banner {
+      background: #fff;
+      margin: -24px auto 36px;
+      max-width: 1140px;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      padding: 20px 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      position: relative;
+      z-index: 10;
+      border: 1px solid var(--border);
+    }
+
+    .sync-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sync-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sync-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .sync-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: monospace;
+      direction: ltr;
+      text-align: right;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+
+    .section-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 40px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin: -8px 0 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 10px 25px -3px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .card p {
+      margin: 0 0 18px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .picker-box {
+      margin: auto 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .value-display {
+      padding: 10px 14px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #0f172a;
+      font-family: monospace;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      direction: ltr;
+      border: 1px solid #e2e8f0;
+      word-break: break-all;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 6px 14px;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.84rem;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-solid {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-solid:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Sandbox Panel */
+    .sandbox-panel {
+      background: #fff;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-top: 16px;
+    }
+
+    .sandbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .text-input {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: #f8fafc;
+      transition: border-color 0.15s;
+    }
+    .text-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .token-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 0.86rem;
+    }
+
+    .token-table th, .token-table td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: right;
+    }
+
+    .token-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+
+    /* Code block */
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 18px 20px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 0.86rem;
+      line-height: 1.6;
+      direction: ltr;
+      text-align: left;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📅 Persian Datepicker & SmartDate Engine</h1>
+  <p>کتابخانه تقویم چندمنظوره با موتور یکپارچه SmartDate (شمسی، میلادی، قمری) و پشتیبانی فریم‌ورک‌های مدرن</p>
+  <div class="badge-bar">
+    <span class="badge">🚀 v3.0 Release</span>
+    <span class="badge">🌐 Jalali / Hijri / Gregorian Hub</span>
+    <span class="badge">PHP-Style Format Engine</span>
+    <span class="badge">React / Vue / Vanilla / Angular / Svelte</span>
+    <span class="badge">Zero External Runtime Dependencies</span>
+  </div>
+</header>
+
+<!-- Live Synchronized Hub Banner -->
+<div class="top-sync-banner">
+  <div class="sync-col">
+    <span class="sync-title">تقویم شمسی (Jalali)</span>
+    <span class="sync-value" id="live-jalali">در حال بارگذاری...</span>
+    <span class="sync-meta" id="live-jalali-meta">Pattern: l j F Y</span>
+  </div>
+  <div class="sync-col">
+    <span class="sync-title">تقویم میلادی (Gregorian)</span>
+    <span class="sync-value" id="live-gregorian">در حال بارگذاری...</span>
+    <span class="sync-meta" id="live-gregorian-meta">Pattern: l, F j, Y</span>
+  </div>
+  <div class="sync-col">
+    <span class="sync-title">تقویم قمری (Hijri)</span>
+    <span class="sync-value" id="live-hijri">در حال بارگذاری...</span>
+    <span class="sync-meta" id="live-hijri-meta">Kuwaiti Tabular Hub</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- ==================== بخش اول: نمایش کامپوننت‌های دیت‌پیکر ==================== -->
+  <h2 class="section-title">✨ کامپوننت‌ها و حالت‌های دیت‌پیکر</h2>
+  <p class="section-desc">پشتیبانی کامل از سوئیچر تقویم، حالت‌های Range و Multiple، تم‌های مختلف، و فرمت‌های سفارشی</p>
+
+  <div class="grid">
+
+    <!-- ١. تقویم با سوئیچر تقویم -->
+    <div class="card">
+      <h3>تقویم شمسی + تعویض تقویم (Switcher)</h3>
+      <p>امکان تغییر آنی بین شمسی، میلادی و قمری توسط کاربر با دکمه‌های سوئیچر بالای تقویم</p>
+      <div class="picker-box">
+        <div id="dp-switcher"></div>
+        <div class="value-display" id="val-switcher">—</div>
+        <div class="action-row">
+          <button class="btn" id="btn-sw-clear">پاک کردن</button>
+          <button class="btn" id="btn-sw-toggle">باز / بسته</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ٢. حالت بازه تاریخی (Range Mode) -->
+    <div class="card">
+      <h3>انتخاب بازه تاریخی (Range Mode)</h3>
+      <p>انتخاب تاریخ شروع و پایان با هایلایت محدوده، مناسب برای رزرو و گزارش‌گیری</p>
+      <div class="picker-box">
+        <div id="dp-range"></div>
+        <div class="value-display" id="val-range">—</div>
+      </div>
+    </div>
+
+    <!-- ٣. انتخاب چند تاریخ (Multiple Mode) -->
+    <div class="card">
+      <h3>انتخاب چند تاریخ (Multiple Mode)</h3>
+      <p>انتخاب روزهای غیرمتوالی، کلیک مجدد تاریخ انتخابی را لغو می‌کند</p>
+      <div class="picker-box">
+        <div id="dp-multi"></div>
+        <div class="value-display" id="val-multi">—</div>
+      </div>
+    </div>
+
+    <!-- ٤. انتخابگر همزمان تاریخ و ساعت (Date & Time) -->
+    <div class="card">
+      <h3>تاریخ و ساعت (Date & Time Picker)</h3>
+      <p>انتخاب روز همراه با تعیین ساعت و دقیقه با فرمت ۲۴ ساعته یا ۱۲ ساعته</p>
+      <div class="picker-box">
+        <div id="dp-datetime"></div>
+        <div class="value-display" id="val-datetime">—</div>
+      </div>
+    </div>
+
+    <!-- ٥. تقویم همیشه باز (Inline Mode) -->
+    <div class="card">
+      <h3>حالت توکار (Inline Mode)</h3>
+      <p>تقویم بدون نیاز به input به صورت مداوم در صفحه تعبیه شده است</p>
+      <div class="picker-box">
+        <div id="dp-inline"></div>
+        <div class="value-display" id="val-inline">—</div>
+      </div>
+    </div>
+
+    <!-- ٦. تم تیره (Dark Theme) -->
+    <div class="card" style="background: #1e293b; color: #f8fafc; border-color: #334155;">
+      <h3 style="color: #93c5fd;">تم تیره (Dark Theme)</h3>
+      <p style="color: #94a3b8;">طراحی تاریک مدرن مناسب برای داشبوردهای دارک مود</p>
+      <div class="picker-box">
+        <div id="dp-dark"></div>
+        <div class="value-display" id="val-dark" style="background:#0f172a; color:#93c5fd; border-color:#334155;">—</div>
+      </div>
+    </div>
+
+    <!-- ٧. تم شیشه‌ای Glassmorphism & iOS -->
+    <div class="card">
+      <h3>تم سیستم عامل iOS</h3>
+      <p>گوشه‌های گرد با استایل اپل و حس طراحی مینیمال</p>
+      <div class="picker-box">
+        <div id="dp-ios"></div>
+        <div class="value-display" id="val-ios">—</div>
+      </div>
+    </div>
+
+    <!-- ٨. با محدودیت Min/Max و غیرفعال‌سازی روزهای تعطیل -->
+    <div class="card">
+      <h3>محدودیت تاریخ و تعطیلات</h3>
+      <p>فقط بازه ۱۰ روز آینده قابل انتخاب است؛ روزهای جمعه غیرفعال شده‌اند</p>
+      <div class="picker-box">
+        <div id="dp-restricted"></div>
+        <div class="value-display" id="val-restricted">—</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== بخش دوم: محیط زنده تست SmartDate و PHP Formatter ==================== -->
+  <h2 class="section-title">🧪 محیط آزمایشی موتور SmartDate و فرمت PHP</h2>
+  <p class="section-desc">کلاس یکپارچه SmartDate قادر است به طور همزمان هر سه تقویم را محاسبه کرده و توکن‌های PHP را فرمت کند</p>
+
+  <div class="sandbox-panel">
+    <div class="sandbox-grid">
+      <div class="input-group">
+        <label>الگوی فرمت PHP (Pattern Tokens):</label>
+        <input type="text" class="text-input" id="sb-pattern" value="l j F Y - H:i:s" />
+      </div>
+      <div class="input-group">
+        <label>آزمایش پارس تاریخ (ورودی شمسی با ارقام فارسی/انگلیسی):</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" class="text-input" style="flex:1" id="sb-parse-input" value="۱۴۰۳/۰۷/۱۴" />
+          <button class="btn btn-solid" id="sb-btn-parse">پارس کن</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <h4 style="margin: 0 0 12px; color: var(--primary);">خروجی فرمت شده با الگوی فوق:</h4>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+        <div class="value-display" style="flex-direction:column; align-items:flex-start;">
+          <span style="font-size:0.75rem; color:#64748b;">شمسی (Jalali):</span>
+          <strong id="sb-out-jalali" style="color:#0f172a; margin-top:4px;">—</strong>
+        </div>
+        <div class="value-display" style="flex-direction:column; align-items:flex-start;">
+          <span style="font-size:0.75rem; color:#64748b;">میلادی (Gregorian):</span>
+          <strong id="sb-out-gregorian" style="color:#0f172a; margin-top:4px;">—</strong>
+        </div>
+        <div class="value-display" style="flex-direction:column; align-items:flex-start;">
+          <span style="font-size:0.75rem; color:#64748b;">قمری (Hijri):</span>
+          <strong id="sb-out-hijri" style="color:#0f172a; margin-top:4px;">—</strong>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <h4 style="margin: 0 0 8px; color: #334155;">جدول راهنمای توکن‌های فرمت PHP:</h4>
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>توکن</th>
+            <th>عملکرد</th>
+            <th>مثال خروجی</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>l</td><td>نام کامل روز هفته</td><td>شنبه / السبت / Saturday</td></tr>
+          <tr><td>j / d</td><td>روز ماه (بدون صفر / دو رقمی)</td><td>۱۴ / 14 / 05</td></tr>
+          <tr><td>F / m</td><td>نام ماه / شماره ماه دو رقمی</td><td>مهر / October / 07</td></tr>
+          <tr><td>Y / y</td><td>سال ۴ رقمی / سال ۲ رقمی</td><td>۱۴۰۳ / 03 / 2026</td></tr>
+          <tr><td>t</td><td>تعداد کل روزهای ماه جاری</td><td>31 / 30 / 29</td></tr>
+          <tr><td>L</td><td>کبیسه بودن سال</td><td>1 (کبیسه) یا 0</td></tr>
+          <tr><td>H:i:s</td><td>ساعت ۲۴ رقمی:دقیقه:ثانیه</td><td>14:35:09</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== بخش سوم: نمونه کد فریم‌ورک‌ها ==================== -->
+  <h2 class="section-title">💻 نمونه کدهای استفاده در فریم‌ورک‌ها</h2>
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;">
+    <div>
+      <h4 style="margin: 0 0 8px;">React (کنترل شده / Controlled):</h4>
+      <pre><code>import { DatePicker } from 'my-datepicker-react';
+
+export function App() {
+  const [val, setVal] = useState('1403/07/14');
+  return (
+    &lt;DatePicker
+      calendar="jalali"
+      calendarSwitcher={true}
+      mode="single"
+      pattern="l j F Y"
+      value={val}
+      onChange={(newVal) => setVal(newVal)}
+    /&gt;
+  );
+}</code></pre>
+    </div>
+    <div>
+      <h4 style="margin: 0 0 8px;">کلاس SmartDate در TypeScript:</h4>
+      <pre><code>import { SmartDate } from 'my-datepicker-core';
+
+const sd = SmartDate.now();
+console.log(sd.getShYear()); // 1405
+console.log(sd.format('l j F Y')); // دوشنبه ۱۴ مهر ۱۴۰۵
+console.log(sd.toGregorian()); // [2026, 10, 6]
+console.log(sd.isLeap()); // false
+const nextMonth = sd.addMonths(1);</code></pre>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  کتابخانه Persian Datepicker v3 — توسعه یافته بر پایه الگوریتم ۳۳ ساله تقویم جلالی (Breaks) و الگوریتم کویتی تقویم هجری
+</footer>
+
+<!-- App Script -->
+<script type="module">
+  import { DatePicker, SmartDate, SmartDateFormat } from '/packages/core/src/index.ts';
+
+  // 1. Live banner clock
+  function updateLiveClock() {
+    const now = SmartDate.now();
+    document.getElementById('live-jalali').textContent = now.format('l j F Y', 'jalali');
+    document.getElementById('live-jalali-meta').textContent = `${now.format('H:i:s')} | کبیسه: ${now.isLeap('jalali') ? 'بله' : 'خیر'}`;
+
+    document.getElementById('live-gregorian').textContent = now.format('l, F j, Y', 'gregorian');
+    document.getElementById('live-gregorian-meta').textContent = `${now.format('H:i:s')} | Leap: ${now.grgIsLeap() ? 'Yes' : 'No'}`;
+
+    document.getElementById('live-hijri').textContent = now.format('l j F Y', 'hijri');
+    document.getElementById('live-hijri-meta').textContent = `Kuwaiti Tabular | ${now.format('H:i:s')}`;
+  }
+  updateLiveClock();
+  setInterval(updateLiveClock, 1000);
+
+  // 2. Component 1: Jalali with Calendar Switcher
+  const dpSwitcher = new DatePicker('#dp-switcher', {
+    calendar: 'jalali',
+    calendarSwitcher: true,
+    pattern: 'l j F Y',
+  });
+  dpSwitcher.on('change', ({ value }) => {
+    document.getElementById('val-switcher').textContent = JSON.stringify(value);
+  });
+  document.getElementById('btn-sw-clear').addEventListener('click', () => dpSwitcher.clear());
+  document.getElementById('btn-sw-toggle').addEventListener('click', () => dpSwitcher.toggle());
+
+  // 3. Component 2: Range Mode
+  const dpRange = new DatePicker('#dp-range', {
+    mode: 'range',
+    calendar: 'jalali',
+    pattern: 'Y/m/d',
+  });
+  dpRange.on('change', ({ value }) => {
+    document.getElementById('val-range').textContent = JSON.stringify(value);
+  });
+
+  // 4. Component 3: Multiple Mode
+  const dpMulti = new DatePicker('#dp-multi', {
+    mode: 'multiple',
+    calendar: 'jalali',
+    pattern: 'Y/m/d',
+  });
+  dpMulti.on('change', ({ value }) => {
+    document.getElementById('val-multi').textContent = JSON.stringify(value);
+  });
+
+  // 5. Component 4: Date & Time Picker
+  const dpDateTime = new DatePicker('#dp-datetime', {
+    calendar: 'jalali',
+    showTime: true,
+    timeFormat: '24h',
+    pattern: 'Y/m/d H:i',
+  });
+  dpDateTime.on('change', ({ value }) => {
+    document.getElementById('val-datetime').textContent = JSON.stringify(value);
+  });
+
+  // 6. Component 5: Inline Mode
+  const dpInline = new DatePicker('#dp-inline', {
+    inline: true,
+    calendar: 'jalali',
+    pattern: 'l j F Y',
+  });
+  dpInline.on('change', ({ value }) => {
+    document.getElementById('val-inline').textContent = JSON.stringify(value);
+  });
+
+  // 7. Component 6: Dark Theme
+  const dpDark = new DatePicker('#dp-dark', {
+    theme: 'dark',
+    calendar: 'jalali',
+    pattern: 'Y/m/d',
+  });
+  dpDark.on('change', ({ value }) => {
+    document.getElementById('val-dark').textContent = JSON.stringify(value);
+  });
+
+  // 8. Component 7: iOS Theme
+  const dpIos = new DatePicker('#dp-ios', {
+    theme: 'ios',
+    calendar: 'gregorian',
+    pattern: 'm/d/Y',
+  });
+  dpIos.on('change', ({ value }) => {
+    document.getElementById('val-ios').textContent = JSON.stringify(value);
+  });
+
+  // 9. Component 8: Min/Max Restricted
+  const today = new Date();
+  const maxLimit = new Date();
+  maxLimit.setDate(today.getDate() + 10);
+  const dpRestricted = new DatePicker('#dp-restricted', {
+    calendar: 'jalali',
+    minDate: new SmartDate(today).format('Y-m-d'),
+    maxDate: new SmartDate(maxLimit).format('Y-m-d'),
+    disabledWeekdays: [6], // Friday (جمعه) in Persian week
+    pattern: 'l j F Y',
+  });
+  dpRestricted.on('change', ({ value }) => {
+    document.getElementById('val-restricted').textContent = JSON.stringify(value);
+  });
+
+  // 10. Live Sandbox Formatter
+  let activeSandboxDate = SmartDate.now();
+  function refreshSandboxOutput() {
+    const pat = document.getElementById('sb-pattern').value || 'Y/m/d';
+    document.getElementById('sb-out-jalali').textContent = activeSandboxDate.format(pat, 'jalali');
+    document.getElementById('sb-out-gregorian').textContent = activeSandboxDate.format(pat, 'gregorian');
+    document.getElementById('sb-out-hijri').textContent = activeSandboxDate.format(pat, 'hijri');
+  }
+
+  document.getElementById('sb-pattern').addEventListener('input', refreshSandboxOutput);
+  document.getElementById('sb-btn-parse').addEventListener('click', () => {
+    const txt = document.getElementById('sb-parse-input').value;
+    try {
+      activeSandboxDate = SmartDateFormat.parse(txt, undefined, 'jalali');
+      refreshSandboxOutput();
+    } catch (e) {
+      alert('خطا در پارس تاریخ: ' + e.message);
+    }
+  });
+
+  refreshSandboxOutput();
+</script>
+
+</body>
+</html>

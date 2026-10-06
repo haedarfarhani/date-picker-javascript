@@ -19,7 +19,7 @@ import { gregorianToJDN, jdnToGregorian } from './gregorian';
 // Break-point table (Birashk)
 // ---------------------------------------------------------------------------
 
-const BREAKS = [
+export const BREAKS = [
   -61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210,
   1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178,
 ] as const;
@@ -37,7 +37,7 @@ const BREAKS = [
 export function jalCal(jy: number): { leap: number; gy: number; march: number } {
   const gy = jy + 621;
   let leapJ = -14;
-  let jp = BREAKS[0];
+  let jp: number = BREAKS[0];
   let jump = 0;
   let i: number;
 
@@ -45,7 +45,7 @@ export function jalCal(jy: number): { leap: number; gy: number; march: number } 
     const jb = BREAKS[i];
     jump = jb - jp;
     if (jy < jb) break;
-    leapJ += Math.floor(jump / 33) * 8 + Math.floor(((jump % 33) + 3) / 4);
+    leapJ += Math.floor(jump / 33) * 8 + Math.floor((jump % 33) / 4);
     jp = jb;
   }
 

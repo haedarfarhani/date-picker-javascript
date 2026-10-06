@@ -1,248 +1,459 @@
+/* ==========================================================================
+   my-datepicker — Modern Multi-Calendar Stylesheet (v3)
+   ========================================================================== */
+
+:root {
+  --dp-primary: #1976d2;
+  --dp-primary-hover: #1565c0;
+  --dp-primary-light: #e3f2fd;
+  --dp-text: #212529;
+  --dp-text-muted: #757575;
+  --dp-bg: #ffffff;
+  --dp-border: #e0e0e0;
+  --dp-radius: 8px;
+  --dp-cell-radius: 6px;
+  --dp-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --dp-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Vazirmatn', sans-serif;
+}
+
 .dp-input {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 14px;
+  border: 1px solid var(--dp-border);
+  border-radius: var(--dp-radius);
   font-size: 14px;
+  font-family: var(--dp-font);
+  background: var(--dp-bg);
+  color: var(--dp-text);
   cursor: pointer;
-  min-width: 200px;
-  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
 }
 
-.dp-popup,
-.dp-inline {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  width: 300px;
-  user-select: none;
-  direction: ltr;
-}
-
-.dp-popup {
-  position: absolute;
-  margin-top: 4px;
-}
-
-.dp-theme-dark {
-  background: #2d2d2d;
-  border-color: #444;
-  color: #e0e0e0;
-}
-
-.dp-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.dp-theme-dark .dp-header {
-  border-bottom-color: #444;
-}
-
-.dp-nav-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px 8px;
-  font-size: 16px;
-  color: #333;
-  border-radius: 4px;
-}
-
-.dp-theme-dark .dp-nav-btn {
-  color: #e0e0e0;
-}
-
-.dp-nav-btn:hover {
-  background: #f0f0f0;
-}
-
-.dp-theme-dark .dp-nav-btn:hover {
-  background: #444;
-}
-
-.dp-month-year {
-  font-weight: 600;
-  font-size: 14px;
-  color: #333;
-}
-
-.dp-theme-dark .dp-month-year {
-  color: #e0e0e0;
-}
-
-.dp-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  padding: 8px 12px;
-  gap: 2px;
-}
-
-.dp-weekday {
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  color: #666;
-  padding: 4px;
-}
-
-.dp-theme-dark .dp-weekday {
-  color: #aaa;
-}
-
-.dp-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  padding: 0 12px 12px;
-  gap: 2px;
-}
-
-.dp-day {
-  aspect-ratio: 1;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 13px;
-  color: #333;
-  transition: background-color 0.15s ease;
-}
-
-.dp-theme-dark .dp-day {
-  color: #e0e0e0;
-}
-
-.dp-day:hover:not(.dp-day--disabled):not(.dp-day--selected) {
-  background: #f0f0f0;
-}
-
-.dp-theme-dark .dp-day:hover:not(.dp-day--disabled):not(.dp-day--selected) {
-  background: #444;
-}
-
-.dp-day--today {
-  font-weight: 700;
-  color: #1976d2;
-}
-
-.dp-theme-dark .dp-day--today {
-  color: #64b5f6;
-}
-
-.dp-day--selected {
-  background: #1976d2;
-  color: #fff;
-  border-radius: 4px;
-}
-
-.dp-day--selected:hover {
-  background: #1565c0;
-}
-
-.dp-day--disabled {
-  color: #ccc;
-  cursor: not-allowed;
-}
-
-.dp-theme-dark .dp-day--disabled {
-  color: #555;
-}
-
-.dp-day--other-month {
-  color: #bbb;
-}
-
-.dp-theme-dark .dp-day--other-month {
-  color: #555;
-}
-
-.dp-day--range-start {
-  background: #1976d2;
-  color: #fff;
-  border-radius: 4px 0 0 4px;
-}
-
-.dp-day--range-end {
-  background: #1976d2;
-  color: #fff;
-  border-radius: 0 4px 4px 0;
-}
-
-.dp-day--in-range {
-  background: #e3f2fd;
-  color: #333;
-}
-
-.dp-theme-dark .dp-day--in-range {
-  background: #1e3a5f;
-  color: #e0e0e0;
-}
-
-.dp-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 8px 12px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.dp-theme-dark .dp-footer {
-  border-top-color: #444;
-}
-
-.dp-btn {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  background: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
-  color: #333;
-}
-
-.dp-theme-dark .dp-btn {
-  background: #3d3d3d;
-  border-color: #555;
-  color: #e0e0e0;
-}
-
-.dp-btn:hover {
-  background: #f0f0f0;
-}
-
-.dp-theme-dark .dp-btn:hover {
-  background: #555;
+.dp-input:focus,
+.dp-input:hover {
+  border-color: var(--dp-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
 }
 
 .dp-overlay {
   display: none;
   position: fixed;
   inset: 0;
+  background: transparent;
   z-index: 999;
 }
 
-.dp-overlay--visible {
-  display: block;
-}
-
-.dp-input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  font-family: inherit;
+.dp-popup,
+.dp-inline {
+  background: var(--dp-bg);
+  border: 1px solid var(--dp-border);
+  border-radius: var(--dp-radius);
+  box-shadow: var(--dp-shadow);
+  font-family: var(--dp-font);
+  width: 320px;
+  max-width: 100%;
+  user-select: none;
+  box-sizing: border-box;
+  color: var(--dp-text);
+  overflow: hidden;
 }
 
 .dp-popup {
+  display: none;
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 4px;
+  margin-top: 6px;
+  z-index: 1000;
+}
+
+/* --------------------------------------------------------------------------
+   Calendar Switcher (شمسی / میلادی / قمری)
+   -------------------------------------------------------------------------- */
+.dp-calendar-switcher {
+  display: flex;
+  background: #f1f3f5;
+  padding: 4px;
+  margin: 10px 12px 2px;
+  border-radius: 8px;
+  gap: 4px;
+}
+
+.dp-calendar-switcher-btn {
+  flex: 1;
+  padding: 6px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  color: var(--dp-text-muted);
+  transition: all 0.15s ease;
+}
+
+.dp-calendar-switcher-btn--active {
+  background: #fff;
+  color: var(--dp-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+.dp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+}
+
+.dp-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--dp-text);
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.dp-nav-btn:hover {
+  background: var(--dp-primary-light);
+  color: var(--dp-primary);
+}
+
+.dp-month-year {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--dp-text);
+}
+
+/* --------------------------------------------------------------------------
+   Weekdays
+   -------------------------------------------------------------------------- */
+.dp-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 10px 6px;
+  text-align: center;
+}
+
+.dp-weekday {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--dp-text-muted);
+  padding: 4px 0;
+}
+
+/* --------------------------------------------------------------------------
+   Grid & Day Cells
+   -------------------------------------------------------------------------- */
+.dp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 10px 10px;
+  gap: 2px;
+}
+
+.dp-day {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--dp-cell-radius);
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--dp-text);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  position: relative;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.dp-day:hover:not(.dp-day--disabled) {
+  background: var(--dp-primary-light);
+  color: var(--dp-primary);
+}
+
+.dp-day--other-month {
+  color: #c4c4c4;
+}
+
+.dp-day--today {
+  border-color: var(--dp-primary);
+  font-weight: 600;
+  color: var(--dp-primary);
+}
+
+.dp-day--selected {
+  background: var(--dp-primary) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.dp-day--in-range {
+  background: var(--dp-primary-light);
+  color: var(--dp-primary);
+  border-radius: 0;
+}
+
+.dp-day--range-start {
+  background: var(--dp-primary) !important;
+  color: #fff !important;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+[dir="rtl"] .dp-day--range-start {
+  border-top-right-radius: var(--dp-cell-radius);
+  border-bottom-right-radius: var(--dp-cell-radius);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.dp-day--range-end {
+  background: var(--dp-primary) !important;
+  color: #fff !important;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+[dir="rtl"] .dp-day--range-end {
+  border-top-left-radius: var(--dp-cell-radius);
+  border-bottom-left-radius: var(--dp-cell-radius);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.dp-day--disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Time Picker
+   -------------------------------------------------------------------------- */
+.dp-timepicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--dp-border);
+  background: #fafbfc;
+  font-size: 13px;
+}
+
+.dp-time-label {
+  font-weight: 500;
+  color: var(--dp-text-muted);
+}
+
+.dp-time-input {
+  width: 44px;
+  padding: 4px 6px;
+  border: 1px solid var(--dp-border);
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: center;
+  font-family: inherit;
+  color: var(--dp-text);
+  background: #fff;
+}
+
+.dp-time-sep {
+  font-weight: bold;
+  color: var(--dp-text-muted);
+}
+
+.dp-ampm-btn {
+  padding: 4px 8px;
+  border: 1px solid var(--dp-border);
+  background: #fff;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--dp-text);
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.dp-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-top: 1px solid var(--dp-border);
+  background: #fafbfc;
+}
+
+.dp-btn {
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--dp-primary);
+  transition: all 0.15s;
+}
+
+.dp-btn:hover {
+  background: var(--dp-primary-light);
+}
+
+.dp-btn-clear {
+  color: #e53935;
+}
+.dp-btn-clear:hover {
+  background: #ffebee;
+}
+
+/* --------------------------------------------------------------------------
+   Multi-Month Layout
+   -------------------------------------------------------------------------- */
+.dp-layout-multi-month {
+  width: auto;
+  max-width: 660px;
+}
+
+.dp-multi-month-container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dp-month-pane {
+  flex: 1;
+  min-width: 290px;
+}
+
+/* --------------------------------------------------------------------------
+   Themes
+   -------------------------------------------------------------------------- */
+
+/* Dark Theme */
+.dp-theme-dark {
+  --dp-bg: #1e1e1e;
+  --dp-text: #f0f0f0;
+  --dp-text-muted: #9e9e9e;
+  --dp-border: #333333;
+  --dp-primary: #90caf9;
+  --dp-primary-hover: #64b5f6;
+  --dp-primary-light: #263238;
+}
+
+.dp-theme-dark .dp-calendar-switcher {
+  background: #2a2a2a;
+}
+.dp-theme-dark .dp-calendar-switcher-btn--active {
+  background: #3a3a3a;
+  color: var(--dp-primary);
+}
+.dp-theme-dark .dp-timepicker,
+.dp-theme-dark .dp-footer {
+  background: #252525;
+}
+.dp-theme-dark .dp-time-input,
+.dp-theme-dark .dp-ampm-btn {
+  background: #333;
+  border-color: #444;
+  color: #fff;
+}
+.dp-theme-dark .dp-day--other-month {
+  color: #555555;
+}
+
+/* Material Theme */
+.dp-theme-material {
+  --dp-primary: #6200ee;
+  --dp-primary-hover: #3700b3;
+  --dp-primary-light: #ede7f6;
+  --dp-radius: 4px;
+  --dp-cell-radius: 4px;
+  --dp-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+
+/* iOS Theme */
+.dp-theme-ios {
+  --dp-primary: #007aff;
+  --dp-primary-hover: #0051a8;
+  --dp-primary-light: #e5f1ff;
+  --dp-radius: 14px;
+  --dp-cell-radius: 8px;
+  --dp-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Glassmorphism Theme */
+.dp-theme-glass {
+  --dp-bg: rgba(255, 255, 255, 0.75);
+  --dp-border: rgba(255, 255, 255, 0.4);
+  --dp-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dp-theme-glass .dp-timepicker,
+.dp-theme-glass .dp-footer {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   Designs
+   -------------------------------------------------------------------------- */
+
+/* Rounded (Pill) */
+.dp-design-rounded .dp-day {
+  border-radius: 50% !important;
+}
+
+/* Minimal */
+.dp-design-minimal {
+  border: none;
+  box-shadow: none;
+}
+.dp-design-minimal .dp-footer,
+.dp-design-minimal .dp-timepicker {
+  border-top: none;
+  background: transparent;
+}
+
+/* Bordered */
+.dp-design-bordered {
+  border: 2px solid #000;
+  box-shadow: 4px 4px 0px #000;
+  border-radius: 0;
+}
+.dp-design-bordered .dp-day {
+  border-radius: 0;
+}
+
+/* Compact */
+.dp-design-compact {
+  width: 270px;
+}
+.dp-design-compact .dp-day {
+  height: 28px;
+  font-size: 12px;
+}
+.dp-design-compact .dp-header {
+  padding: 8px 10px;
 }

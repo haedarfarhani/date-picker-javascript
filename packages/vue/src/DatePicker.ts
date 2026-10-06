@@ -4,7 +4,6 @@ import {
   onMounted,
   onUnmounted,
   watch,
-  expose,
   h,
   type PropType,
 } from 'vue';
@@ -16,13 +15,12 @@ import type {
   CalendarType,
   FirstDayOfWeek,
   Theme,
+  Design,
+  Layout,
   TimeFormat,
+  NumeralSystem,
   LocaleConfig,
 } from 'my-datepicker-core';
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 function mapPropsToOptions(props: Record<string, unknown>): Partial<DatePickerOptions> {
   const {
@@ -38,85 +36,58 @@ function mapPropsToOptions(props: Record<string, unknown>): Partial<DatePickerOp
   return rest as Partial<DatePickerOptions>;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
-/**
- * Vue 3 wrapper for my-datepicker-core.
- *
- * Usage:
- *   <DatePicker v-model="date" locale="fa-IR" />
- *
- * Exposes: open / close / toggle / getValue / setValue / clear / setLocale
- */
 export const DatePicker = defineComponent({
   name: 'DatePicker',
 
   props: {
-    /** v-model binding (controlled value) */
     modelValue: {
-      type: [String, Array] as PropType<string | string[] | null | undefined>,
+      type: [String, Array, Object] as PropType<any>,
       default: undefined,
     },
-    mode: {
-      type: String as PropType<DateMode>,
-      default: undefined,
-    },
-    locale: {
-      type: [String, Object] as PropType<string | Partial<LocaleConfig>>,
-      default: undefined,
-    },
-    calendar: {
-      type: String as PropType<CalendarType>,
-      default: undefined,
-    },
+    mode: { type: String as PropType<DateMode>, default: undefined },
+    locale: { type: [String, Object] as PropType<string | Partial<LocaleConfig>>, default: undefined },
+    calendar: { type: String as PropType<CalendarType>, default: undefined },
+    calendarSwitcher: { type: Boolean, default: undefined },
     format: { type: String, default: undefined },
-    minDate: { type: String, default: undefined },
-    maxDate: { type: String, default: undefined },
+    pattern: { type: String, default: undefined },
+    minDate: { type: [String, Object] as PropType<any>, default: undefined },
+    maxDate: { type: [String, Object] as PropType<any>, default: undefined },
     disabledDates: {
-      type: [Array, Function] as PropType<string[] | ((d: Date) => boolean)>,
+      type: [Array, Function] as PropType<any>,
       default: undefined,
     },
-    firstDayOfWeek: {
-      type: Number as PropType<FirstDayOfWeek>,
-      default: undefined,
-    },
-    theme: {
-      type: String as PropType<Theme>,
-      default: undefined,
-    },
+    disabledWeekdays: { type: Array as PropType<number[]>, default: undefined },
+    firstDayOfWeek: { type: Number as PropType<FirstDayOfWeek>, default: undefined },
+    theme: { type: String as PropType<Theme>, default: undefined },
+    design: { type: String as PropType<Design>, default: undefined },
+    layout: { type: String as PropType<Layout>, default: undefined },
     showTime: { type: Boolean, default: undefined },
-    timeFormat: {
-      type: String as PropType<TimeFormat>,
-      default: undefined,
-    },
+    timeFormat: { type: String as PropType<TimeFormat>, default: undefined },
     inline: { type: Boolean, default: undefined },
     placeholder: { type: String, default: undefined },
     zIndex: { type: Number, default: undefined },
+    numeralSystem: { type: String as PropType<NumeralSystem>, default: undefined },
   },
 
-  emits: ['update:modelValue', 'change', 'open', 'close', 'clear'],
+  emits: ['update:modelValue', 'change', 'open', 'close', 'clear', 'calendar-change'],
 
-  setup(props, { emit, expose: vueExpose }) {
+  setup(props, { emit, expose }) {
     const containerRef = ref<HTMLDivElement | null>(null);
     let instance: DatePickerInstance | null = null;
 
-    // ---- Mount ----
     onMounted(() => {
       if (!containerRef.value) return;
 
       const options = mapPropsToOptions(props as unknown as Record<string, unknown>);
-      // Set initial value
       if (props.modelValue !== undefined && props.modelValue !== null) {
-        options.value = props.modelValue as string | string[];
+        options.value = props.modelValue;
       }
 
       instance = new DatePickerCore(containerRef.value, options);
 
       instance.on('change', (payload) => {
         emit('update:modelValue', payload.value);
-        emit('change', payload.value);
+        emit('change', payload.value, payload.smartDate);
       });
       instance.on('open', () => emit('open'));
       instance.on('close', () => emit('close'));
@@ -124,33 +95,32 @@ export const DatePicker = defineComponent({
         emit('update:modelValue', null);
         emit('clear');
       });
+      instance.on('calendar-change', (payload) => emit('calendar-change', payload.calendar));
     });
 
-    // ---- Unmount ----
     onUnmounted(() => {
       instance?.destroy();
       instance = null;
     });
 
-    // ---- Sync modelValue ----
     watch(
       () => props.modelValue,
       (newVal, oldVal) => {
         if (!instance) return;
         if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
         if (newVal !== undefined && newVal !== null) {
-          instance.setValue(newVal as string | string[]);
+          instance.setValue(newVal);
         } else {
           instance.clear();
         }
       }
     );
 
-    // ---- Sync other options ----
     const optionKeys = [
-      'mode', 'locale', 'calendar', 'format', 'minDate', 'maxDate',
-      'disabledDates', 'firstDayOfWeek', 'theme', 'showTime',
-      'timeFormat', 'inline', 'placeholder', 'zIndex',
+      'mode', 'locale', 'calendar', 'calendarSwitcher', 'format', 'pattern',
+      'minDate', 'maxDate', 'disabledDates', 'disabledWeekdays',
+      'firstDayOfWeek', 'theme', 'design', 'layout', 'showTime',
+      'timeFormat', 'inline', 'placeholder', 'zIndex', 'numeralSystem',
     ] as const;
 
     watch(
@@ -161,15 +131,16 @@ export const DatePicker = defineComponent({
       }
     );
 
-    // ---- Expose imperative API ----
-    vueExpose({
+    expose({
       open: () => instance?.open(),
       close: () => instance?.close(),
       toggle: () => instance?.toggle(),
       getValue: () => instance?.getValue() ?? null,
-      setValue: (v: string | string[]) => instance?.setValue(v),
+      getSmartDate: () => instance?.getSmartDate() ?? null,
+      setValue: (v: any) => instance?.setValue(v),
       clear: () => instance?.clear(),
       setLocale: (l: string) => instance?.setLocale(l),
+      switchCalendar: (c: CalendarType) => instance?.switchCalendar(c),
     });
 
     return () => h('div', { ref: containerRef });

@@ -1,34 +1,70 @@
-import type { LocaleConfig, CalendarCell } from './types';
-import { getLocale } from './i18n';
+import type {
+  LocaleConfig,
+  CalendarCell,
+  CalendarType,
+  Theme,
+  Design,
+  Layout,
+  TimeFormat,
+  NumeralSystem,
+} from './types';
 
-export function createCalendarCellElement(cell: CalendarCell, locale: LocaleConfig): HTMLElement {
+const NUMERAL_MAPS: Record<NumeralSystem, string> = {
+  latn:    '0123456789',
+  arab:    '٠١٢٣٤٥٦٧٨٩',
+  arabext: '۰۱۲۳۴۵۶۷۸۹',
+};
+
+export function toLocalDigits(n: number | string, system: NumeralSystem = 'latn'): string {
+  if (system === 'latn') return String(n);
+  const map = NUMERAL_MAPS[system] || NUMERAL_MAPS.latn;
+  return String(n).replace(/\d/g, (d) => map[parseInt(d, 10)]);
+}
+
+export function createCalendarCellElement(
+  cell: CalendarCell,
+  locale: LocaleConfig,
+  numeralSystem: NumeralSystem = 'latn'
+): HTMLElement {
   const el = document.createElement('button');
   el.type = 'button';
   el.className = 'dp-day';
+  el.setAttribute('role', 'gridcell');
 
   if (cell.isSelected) {
     el.classList.add('dp-day--selected');
+    el.setAttribute('aria-selected', 'true');
+  } else {
+    el.setAttribute('aria-selected', 'false');
   }
+
   if (cell.isToday && !cell.isSelected) {
     el.classList.add('dp-day--today');
   }
+
   if (cell.isDisabled) {
     el.classList.add('dp-day--disabled');
+    el.setAttribute('aria-disabled', 'true');
+    el.disabled = true;
   }
+
   if (cell.isRangeStart) {
     el.classList.add('dp-day--range-start');
   }
+
   if (cell.isRangeEnd) {
     el.classList.add('dp-day--range-end');
   }
+
   if (cell.isInRange) {
     el.classList.add('dp-day--in-range');
   }
+
   if (!cell.isCurrentMonth) {
     el.classList.add('dp-day--other-month');
   }
 
-  el.textContent = String(cell.day);
+  el.textContent = toLocalDigits(cell.day, numeralSystem);
   el.setAttribute('data-date', cell.date.toISOString());
   el.setAttribute('data-day', String(cell.day));
   el.setAttribute('data-month', String(cell.month));
@@ -59,45 +95,108 @@ export function createWeekdayHeaders(locale: LocaleConfig): HTMLElement[] {
   return headers;
 }
 
-export function createYearSelect(
-  viewYear: number,
-  minYear?: number,
-  maxYear?: number
+export function createCalendarSwitcher(
+  currentCalendar: CalendarType,
+  onSwitch: (cal: CalendarType) => void
 ): HTMLElement {
-  const select = document.createElement('select');
-  select.className = 'dp-year-select';
+  const wrapper = document.createElement('div');
+  wrapper.className = 'dp-calendar-switcher';
 
-  const start = minYear || viewYear - 20;
-  const end = maxYear || viewYear + 20;
+  const calendars: { id: CalendarType; label: string }[] = [
+    { id: 'jalali', label: 'شمسی' },
+    { id: 'gregorian', label: 'میلادی' },
+    { id: 'hijri', label: 'قمری' },
+  ];
 
-  for (let year = start; year <= end; year++) {
-    const option = document.createElement('option');
-    option.value = String(year);
-    option.textContent = String(year);
-    if (year === viewYear) {
-      option.selected = true;
+  calendars.forEach((c) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'dp-calendar-switcher-btn';
+    if (c.id === currentCalendar) {
+      btn.classList.add('dp-calendar-switcher-btn--active');
     }
-    select.appendChild(option);
-  }
+    btn.textContent = c.label;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      onSwitch(c.id);
+    });
+    wrapper.appendChild(btn);
+  });
 
-  return select;
+  return wrapper;
 }
 
-export function createMonthSelect(months: string[], viewMonth: number): HTMLElement {
-  const select = document.createElement('select');
-  select.className = 'dp-month-select';
+export function createTimePicker(
+  hour: number,
+  minute: number,
+  timeFormat: TimeFormat,
+  onChange: (h: number, m: number) => void
+): HTMLElement {
+  const container = document.createElement('div');
+  container.className = 'dp-timepicker';
 
-  for (let i = 0; i < months.length; i++) {
-    const option = document.createElement('option');
-    option.value = String(i);
-    option.textContent = months[i];
-    if (i === viewMonth) {
-      option.selected = true;
+  const label = document.createElement('span');
+  label.className = 'dp-time-label';
+  label.textContent = 'زمان:';
+  container.appendChild(label);
+
+  const is12h = timeFormat === '12h';
+  let isPM = hour >= 12;
+  let displayHour = is12h ? hour % 12 || 12 : hour;
+
+  // Hour input
+  const hourInput = document.createElement('input');
+  hourInput.type = 'number';
+  hourInput.className = 'dp-time-input dp-time-hour';
+  hourInput.min = is12h ? '1' : '0';
+  hourInput.max = is12h ? '12' : '23';
+  hourInput.value = String(displayHour).padStart(2, '0');
+
+  // Separator
+  const sep = document.createElement('span');
+  sep.className = 'dp-time-sep';
+  sep.textContent = ':';
+
+  // Minute input
+  const minInput = document.createElement('input');
+  minInput.type = 'number';
+  minInput.className = 'dp-time-input dp-time-minute';
+  minInput.min = '0';
+  minInput.max = '59';
+  minInput.value = String(minute).padStart(2, '0');
+
+  const emit = () => {
+    let h = parseInt(hourInput.value, 10) || 0;
+    const m = parseInt(minInput.value, 10) || 0;
+    if (is12h) {
+      if (isPM && h < 12) h += 12;
+      if (!isPM && h === 12) h = 0;
     }
-    select.appendChild(option);
+    onChange(Math.max(0, Math.min(23, h)), Math.max(0, Math.min(59, m)));
+  };
+
+  hourInput.addEventListener('change', emit);
+  minInput.addEventListener('change', emit);
+
+  container.appendChild(hourInput);
+  container.appendChild(sep);
+  container.appendChild(minInput);
+
+  if (is12h) {
+    const ampmBtn = document.createElement('button');
+    ampmBtn.type = 'button';
+    ampmBtn.className = 'dp-ampm-btn';
+    ampmBtn.textContent = isPM ? 'ب.ظ / PM' : 'ق.ظ / AM';
+    ampmBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isPM = !isPM;
+      ampmBtn.textContent = isPM ? 'ب.ظ / PM' : 'ق.ظ / AM';
+      emit();
+    });
+    container.appendChild(ampmBtn);
   }
 
-  return select;
+  return container;
 }
 
 export function createOverlay(trigger: HTMLElement): HTMLElement {
@@ -111,6 +210,7 @@ export function createPopup(container: HTMLElement, zIndex: number): HTMLElement
   const popup = document.createElement('div');
   popup.className = 'dp-popup';
   popup.setAttribute('role', 'dialog');
+  popup.setAttribute('aria-modal', 'true');
   popup.setAttribute('aria-label', 'Date picker');
   popup.setAttribute('tabindex', '-1');
   popup.style.zIndex = String(zIndex);
@@ -118,12 +218,31 @@ export function createPopup(container: HTMLElement, zIndex: number): HTMLElement
   return popup;
 }
 
-export function applyTheme(popup: HTMLElement, theme: 'light' | 'dark'): void {
-  if (theme === 'dark') {
-    popup.classList.add('dp-theme-dark');
-  } else {
-    popup.classList.remove('dp-theme-dark');
-  }
+export function applyTheme(el: HTMLElement, theme: Theme = 'light'): void {
+  el.classList.remove(
+    'dp-theme-light',
+    'dp-theme-dark',
+    'dp-theme-material',
+    'dp-theme-ios',
+    'dp-theme-glass'
+  );
+  el.classList.add(`dp-theme-${theme}`);
+}
+
+export function applyDesign(el: HTMLElement, design: Design = 'default'): void {
+  el.classList.remove(
+    'dp-design-default',
+    'dp-design-rounded',
+    'dp-design-minimal',
+    'dp-design-bordered',
+    'dp-design-compact'
+  );
+  el.classList.add(`dp-design-${design}`);
+}
+
+export function applyLayout(el: HTMLElement, layout: Layout = 'popup'): void {
+  el.classList.remove('dp-layout-popup', 'dp-layout-inline', 'dp-layout-multi-month');
+  el.classList.add(`dp-layout-${layout}`);
 }
 
 export function applyDirection(popup: HTMLElement, direction: 'ltr' | 'rtl'): void {

@@ -2,14 +2,14 @@
   "name": "my-datepicker",
   "version": "1.0.0",
   "type": "module",
-  "main": "./dist/index.umd.js",
-  "module": "./dist/index.esm.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.esm.js",
-      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.umd.js"
     },
     "./styles.css": "./dist/datepicker.css"
@@ -20,7 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "my-datepicker-core": "workspace:*"
+    "my-datepicker-core": "*"
   },
   "devDependencies": {
     "tsup": "^8.0.0",

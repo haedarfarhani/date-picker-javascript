@@ -7,34 +7,41 @@
  * 30-year cycle with 11 leap years: {2,5,7,10,13,16,18,21,24,26,29}
  * In leap years, Dhul-Hijjah (month 12) has 30 days instead of 29.
  *
- * ⚠️  This differs from the observed (astronomical) Hijri calendar by ±1–2 days.
- *     The `hijriAdjustment` option allows correcting for local conventions.
+ * Supports hijriAdjustment (± days) and presets:
+ * 'tabular' | 'umm-alqura' | 'iranian'
  *
  * Epoch: 1 Muharram 1 AH = Julian 16 July 622 CE = JDN 1948439
  */
 
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
+import type { HijriPreset } from '../types';
 
-/** JDN of 1 Muharram 1 AH (civil epoch, "Friday" variant). */
-const HIJRI_EPOCH_JDN = 1948439;
+/** JDN of 1 Muharram 1 AH (civil epoch). */
+export const HIJRI_EPOCH_JDN = 1948439;
 
 /** Leap years within a 30-year Hijri cycle. */
-const LEAP_YEARS_IN_CYCLE = new Set([2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29]);
+export const HIJRI_LEAP_YEARS = new Set([2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29]);
 
-// ---------------------------------------------------------------------------
-// Leap year
-// ---------------------------------------------------------------------------
+/**
+ * Resolves net adjustment in days given a preset and custom adjustment.
+ */
+export function resolveHijriAdjustment(
+  preset: HijriPreset = 'tabular',
+  userAdjustment = 0
+): number {
+  let presetOffset = 0;
+  if (preset === 'umm-alqura') {
+    presetOffset = -1;
+  } else if (preset === 'iranian') {
+    presetOffset = 0;
+  }
+  return presetOffset + (userAdjustment || 0);
+}
 
 /** Returns true if Hijri year `hy` is a leap year (Dhul-Hijjah = 30 days). */
 export function isHijriLeap(hy: number): boolean {
-  return LEAP_YEARS_IN_CYCLE.has(((hy % 30) + 30) % 30 || 30);
+  const mod = ((hy % 30) + 30) % 30 || 30;
+  return HIJRI_LEAP_YEARS.has(mod);
 }
-
-// ---------------------------------------------------------------------------
-// Month lengths
-// ---------------------------------------------------------------------------
 
 /**
  * Number of days in Hijri month (hm: 1–12).
@@ -43,9 +50,9 @@ export function isHijriLeap(hy: number): boolean {
  *  Month 12:                  29 (normal) or 30 (leap)
  */
 export function hijriMonthLength(hy: number, hm: number): number {
-  if (hm % 2 === 1) return 30;      // odd months: 30
-  if (hm < 12) return 29;           // even months 2-10: 29
-  return isHijriLeap(hy) ? 30 : 29; // month 12: 30 in leap year
+  if (hm % 2 === 1) return 30;
+  if (hm < 12) return 29;
+  return isHijriLeap(hy) ? 30 : 29;
 }
 
 /** Number of days in Hijri year hy (354 or 355). */
@@ -53,22 +60,12 @@ export function hijriYearLength(hy: number): number {
   return isHijriLeap(hy) ? 355 : 354;
 }
 
-// ---------------------------------------------------------------------------
-// Cumulative month start within a year
-// ---------------------------------------------------------------------------
-
 /**
  * Day offset of the start of month hm within the year (0-indexed).
- * Equivalent to ceil(29.5 * (hm - 1)) without floating point risk.
  */
-function monthStartOffset(hm: number): number {
-  // Pattern: 0,30,59,89,118,148,177,207,236,266,295,325
+export function hijriMonthStartOffset(hm: number): number {
   return Math.floor((59 * (hm - 1) + 1) / 2);
 }
-
-// ---------------------------------------------------------------------------
-// JDN ↔ Hijri
-// ---------------------------------------------------------------------------
 
 /**
  * Convert Hijri date to Julian Day Number.
@@ -84,7 +81,7 @@ export function hijriToJDN(
     HIJRI_EPOCH_JDN - 1 +
     (hy - 1) * 354 +
     Math.floor((11 * hy + 3) / 30) +
-    monthStartOffset(hm) +
+    hijriMonthStartOffset(hm) +
     hd +
     adjustment
   );
@@ -100,31 +97,23 @@ export function jdnToHijri(
 ): { year: number; month: number; day: number } {
   const adjustedJDN = jdn - adjustment;
 
-  // Estimate year from linear approximation
-  // 1 Hijri year ≈ 354.367 days, one 30-year cycle = 10631 days
   const shifted = adjustedJDN - HIJRI_EPOCH_JDN;
   let hy = Math.max(1, Math.ceil((shifted * 30 + 29) / 10631));
 
-  // Adjust year to be correct
   while (hijriToJDN(hy + 1, 1, 1) <= adjustedJDN) hy++;
   while (hijriToJDN(hy, 1, 1) > adjustedJDN) hy--;
 
-  // Find month
   const dayInYear = adjustedJDN - hijriToJDN(hy, 1, 1) + 1;
   let hm = 1;
-  while (hm < 12 && dayInYear > monthStartOffset(hm + 1)) hm++;
+  while (hm < 12 && dayInYear > hijriMonthStartOffset(hm + 1)) hm++;
 
-  // Find day
-  const hd = dayInYear - monthStartOffset(hm);
+  const hd = dayInYear - hijriMonthStartOffset(hm);
 
   return { year: hy, month: hm, day: hd };
 }
 
-// ---------------------------------------------------------------------------
-// Day of week
-// ---------------------------------------------------------------------------
-
-/** Day of week for a Hijri date. 0 = Sunday … 6 = Saturday. */
-export function hijriDayOfWeek(hy: number, hm: number, hd: number): number {
-  return (hijriToJDN(hy, hm, hd) + 1) % 7;
+/** Day of week for a Hijri date. 0 = Saturday (Al-Sabt), 1 = Sunday ... 6 = Friday. */
+export function hijriDayOfWeek(hy: number, hm: number, hd: number, adjustment = 0): number {
+  const jdn = hijriToJDN(hy, hm, hd, adjustment);
+  return (jdn + 2) % 7;
 }
