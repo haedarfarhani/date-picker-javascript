@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Persian Datepicker — نمایش کامل</title>
+
+  <!-- Vazirmatn font for Persian -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Datepicker CSS -->
+  <link rel="stylesheet" href="packages/core/styles/datepicker.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 24px;
+      direction: rtl;
+    }
+
+    h1 { font-size: 1.6rem; margin-bottom: 8px; color: #1976d2; }
+    h2 { font-size: 1rem; color: #555; margin: 32px 0 12px; font-weight: 600; }
+    p { color: #666; font-size: 0.9rem; margin: 4px 0 12px; }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .demo-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .demo-card h3 {
+      margin: 0 0 4px;
+      font-size: 0.95rem;
+      color: #222;
+    }
+
+    .demo-card p {
+      margin: 0 0 16px;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .value-display {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: #f0f4ff;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: #1976d2;
+      font-family: monospace;
+      min-height: 32px;
+      direction: ltr;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .btn {
+      padding: 6px 14px;
+      border: 1px solid #1976d2;
+      color: #1976d2;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+
+    .btn:hover { background: #e3f2fd; }
+
+    .toggle-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+
+    label { cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  </style>
+</head>
+<body>
+
+<h1>📅 Persian Datepicker</h1>
+<p>کتابخانه تقویم Framework-Agnostic — پشتیبانی از شمسی، میلادی و هجری</p>
+
+<div class="demo-grid">
+
+  <!-- ١. تقویم شمسی فارسی -->
+  <div class="demo-card">
+    <h3>تقویم شمسی — fa-IR</h3>
+    <p>RTL کامل، روز اول هفته: شنبه، اعداد فارسی</p>
+    <div id="dp-jalali"></div>
+    <div class="value-display" id="val-jalali">—</div>
+    <div class="btn-row">
+      <button class="btn" onclick="dpJalali.clear()">پاک کردن</button>
+      <button class="btn" onclick="dpJalali.toggle()">باز/بسته</button>
+    </div>
+  </div>
+
+  <!-- ٢. تقویم میلادی انگلیسی -->
+  <div class="demo-card">
+    <h3>Gregorian — en-US</h3>
+    <p>LTR, first day: Sunday, ISO date format</p>
+    <div id="dp-gregorian"></div>
+    <div class="value-display" id="val-gregorian">—</div>
+  </div>
+
+  <!-- ٣. حالت Range -->
+  <div class="demo-card">
+    <h3>Range Mode — بازه تاریخی</h3>
+    <p>انتخاب تاریخ شروع و پایان با هایلایت بازه</p>
+    <div id="dp-range"></div>
+    <div class="value-display" id="val-range">—</div>
+  </div>
+
+  <!-- ٤. حالت Multiple -->
+  <div class="demo-card">
+    <h3>Multiple Mode — چند تاریخ</h3>
+    <p>انتخاب چند تاریخ غیرمتوالی (click روی روز = toggle)</p>
+    <div id="dp-multi"></div>
+    <div class="value-display" id="val-multi">—</div>
+  </div>
+
+  <!-- ٥. Dark Theme -->
+  <div class="demo-card" style="background:#1e1e1e; color:#e0e0e0;">
+    <h3 style="color:#90caf9;">Dark Theme</h3>
+    <p style="color:#aaa;">تم تیره با CSS Variables</p>
+    <div id="dp-dark"></div>
+    <div class="value-display" id="val-dark" style="background:#2d2d2d; color:#90caf9;">—</div>
+  </div>
+
+  <!-- ٦. Inline -->
+  <div class="demo-card">
+    <h3>Inline — همیشه باز</h3>
+    <p>بدون input، تقویم همیشه نمایش داده می‌شود</p>
+    <div id="dp-inline"></div>
+    <div class="value-display" id="val-inline">—</div>
+  </div>
+
+  <!-- ٧. با min/max محدود -->
+  <div class="demo-card">
+    <h3>Min/Max Dates</h3>
+    <p>فقط ۷ روز اطراف امروز قابل انتخاب</p>
+    <div id="dp-minmax"></div>
+    <div class="value-display" id="val-minmax">—</div>
+  </div>
+
+  <!-- ٨. تقویم هجری عربی -->
+  <div class="demo-card">
+    <h3>تقویم هجری — ar-SA</h3>
+    <p>Hijri calendar با ماه‌های عربی</p>
+    <div id="dp-hijri"></div>
+    <div class="value-display" id="val-hijri">—</div>
+  </div>
+
+</div>
+
+<!-- Load the UMD/IIFE build -->
+<script src="packages/core/dist/index.global.js"></script>
+
+<script>
+  const { DatePicker } = MyDatepickerCore;
+
+  // ١. جلالی
+  const dpJalali = new DatePicker('#dp-jalali', {
+    locale: 'fa-IR',
+    calendar: 'jalali',
+  });
+  dpJalali.on('change', ({ value }) => {
+    document.getElementById('val-jalali').textContent = JSON.stringify(value);
+  });
+
+  // ٢. میلادی
+  const dpGregorian = new DatePicker('#dp-gregorian', {
+    locale: 'en-US',
+    calendar: 'gregorian',
+  });
+  dpGregorian.on('change', ({ value }) => {
+    document.getElementById('val-gregorian').textContent = JSON.stringify(value);
+  });
+
+  // ٣. Range
+  const dpRange = new DatePicker('#dp-range', {
+    mode: 'range',
+    locale: 'fa-IR',
+    calendar: 'jalali',
+  });
+  dpRange.on('change', ({ value }) => {
+    document.getElementById('val-range').textContent = JSON.stringify(value);
+  });
+
+  // ٤. Multiple
+  const dpMulti = new DatePicker('#dp-multi', {
+    mode: 'multiple',
+    locale: 'en-US',
+  });
+  dpMulti.on('change', ({ value }) => {
+    document.getElementById('val-multi').textContent = JSON.stringify(value);
+  });
+
+  // ٥. Dark
+  const dpDark = new DatePicker('#dp-dark', {
+    theme: 'dark',
+    locale: 'fa-IR',
+    calendar: 'jalali',
+  });
+  dpDark.on('change', ({ value }) => {
+    document.getElementById('val-dark').textContent = JSON.stringify(value);
+  });
+
+  // ٦. Inline
+  const dpInline = new DatePicker('#dp-inline', {
+    inline: true,
+    locale: 'fa-IR',
+    calendar: 'jalali',
+  });
+  dpInline.on('change', ({ value }) => {
+    document.getElementById('val-inline').textContent = JSON.stringify(value);
+  });
+
+  // ٧. Min/Max
+  const today = new Date();
+  const fmt = d => d.toISOString().slice(0, 10);
+  const minD = new Date(today); minD.setDate(today.getDate() - 3);
+  const maxD = new Date(today); maxD.setDate(today.getDate() + 3);
+
+  const dpMinmax = new DatePicker('#dp-minmax', {
+    minDate: fmt(minD),
+    maxDate: fmt(maxD),
+  });
+  dpMinmax.on('change', ({ value }) => {
+    document.getElementById('val-minmax').textContent = JSON.stringify(value);
+  });
+
+  // ٨. Hijri
+  const dpHijri = new DatePicker('#dp-hijri', {
+    locale: 'ar-SA',
+    calendar: 'hijri',
+  });
+  dpHijri.on('change', ({ value }) => {
+    document.getElementById('val-hijri').textContent = JSON.stringify(value);
+  });
+</script>
+
+</body>
+</html>

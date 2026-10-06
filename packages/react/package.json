@@ -1,0 +1,40 @@
+{
+  "name": "my-datepicker-react",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0",
+    "@testing-library/react": "^14.1.0",
+    "jsdom": "^24.0.0"
+  },
+  "dependencies": {
+    "my-datepicker-core": "workspace:*"
+  }
+}

@@ -1,0 +1,18 @@
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2020
+[34mCLI[39m Cleaning output folder
+[34mESM[39m Build start
+[34mCJS[39m Build start
+[34mIIFE[39m Build start
+[32mIIFE[39m [1mdist\index.global.js [22m[32m47.02 KB[39m
+[32mIIFE[39m ⚡️ Build success in 52ms
+[32mESM[39m [1mdist\index.js [22m[32m44.42 KB[39m
+[32mESM[39m ⚡️ Build success in 55ms
+[32mCJS[39m [1mdist\index.cjs [22m[32m45.43 KB[39m
+[32mCJS[39m ⚡️ Build success in 55ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 1511ms
+[32mDTS[39m [1mdist\index.d.ts  [22m[32m14.71 KB[39m
+[32mDTS[39m [1mdist\index.d.cts [22m[32m14.71 KB[39m

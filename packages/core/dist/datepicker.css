@@ -1,0 +1,354 @@
+/* ============================================================
+   Persian Datepicker — Default Stylesheet
+   Theming via CSS Custom Properties (--dp-*)
+   ============================================================ */
+
+/* ---- Custom Properties (Light theme defaults) ------------- */
+:root {
+  --dp-primary:           #1976d2;
+  --dp-primary-hover:     #1565c0;
+  --dp-primary-light:     #e3f2fd;
+
+  --dp-bg:                #ffffff;
+  --dp-bg-hover:          #f5f5f5;
+  --dp-bg-btn:            #ffffff;
+
+  --dp-border:            #e0e0e0;
+  --dp-border-radius:     8px;
+  --dp-border-radius-sm:  4px;
+
+  --dp-text:              #333333;
+  --dp-text-muted:        #888888;
+  --dp-text-disabled:     #cccccc;
+  --dp-text-other-month:  #bbbbbb;
+  --dp-text-today:        #1976d2;
+  --dp-text-selected:     #ffffff;
+  --dp-text-in-range:     #333333;
+
+  --dp-shadow:            0 4px 16px rgba(0, 0, 0, 0.12);
+  --dp-font:              -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Vazirmatn', Roboto, sans-serif;
+  --dp-font-size:         14px;
+  --dp-font-size-sm:      12px;
+  --dp-width:             300px;
+  --dp-z-index:           1000;
+
+  --dp-header-padding:    12px 16px;
+  --dp-grid-padding:      0 12px 12px;
+  --dp-cell-size:         36px;
+  --dp-cell-radius:       50%;
+
+  --dp-input-padding:     8px 12px;
+  --dp-input-border:      1px solid var(--dp-border);
+  --dp-input-radius:      6px;
+}
+
+/* ---- Dark theme overrides --------------------------------- */
+.dp-theme-dark {
+  --dp-bg:                #1e1e1e;
+  --dp-bg-hover:          #2d2d2d;
+  --dp-bg-btn:            #2d2d2d;
+  --dp-border:            #444444;
+  --dp-text:              #e0e0e0;
+  --dp-text-muted:        #aaaaaa;
+  --dp-text-disabled:     #555555;
+  --dp-text-other-month:  #555555;
+  --dp-text-today:        #90caf9;
+  --dp-primary:           #90caf9;
+  --dp-primary-hover:     #64b5f6;
+  --dp-primary-light:     #1e3a5f;
+  --dp-text-in-range:     #e0e0e0;
+  --dp-shadow:            0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- Screen-reader only utility --------------------------- */
+.dp-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Wrapper ---------------------------------------------- */
+.dp-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  font-family: var(--dp-font);
+  font-size: var(--dp-font-size);
+}
+
+/* ---- Input ------------------------------------------------ */
+.dp-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--dp-input-padding);
+  border: var(--dp-input-border);
+  border-radius: var(--dp-input-radius);
+  font-size: var(--dp-font-size);
+  font-family: var(--dp-font);
+  color: var(--dp-text);
+  background: var(--dp-bg);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dp-input:focus {
+  border-color: var(--dp-primary);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+}
+
+/* ---- Popup / dialog --------------------------------------- */
+.dp-popup {
+  position: absolute;
+  top: calc(100% + 4px);
+  inset-inline-start: 0;
+  width: var(--dp-width);
+  background: var(--dp-bg);
+  border: 1px solid var(--dp-border);
+  border-radius: var(--dp-border-radius);
+  box-shadow: var(--dp-shadow);
+  font-family: var(--dp-font);
+  font-size: var(--dp-font-size);
+  color: var(--dp-text);
+  user-select: none;
+  z-index: var(--dp-z-index);
+  overflow: hidden;
+}
+
+/* RTL popup alignment */
+[dir="rtl"] .dp-popup {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+/* Inline mode */
+.dp-inline-wrapper .dp-popup {
+  position: relative;
+  top: auto;
+  box-shadow: var(--dp-shadow);
+}
+
+/* ---- Header ----------------------------------------------- */
+.dp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--dp-header-padding);
+  border-bottom: 1px solid var(--dp-border);
+}
+
+.dp-month-year {
+  font-weight: 600;
+  font-size: var(--dp-font-size);
+  color: var(--dp-text);
+  text-align: center;
+  flex: 1;
+}
+
+/* ---- Navigation buttons ----------------------------------- */
+.dp-nav-btn {
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--dp-text);
+  border-radius: var(--dp-border-radius-sm);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.dp-nav-btn:hover {
+  background: var(--dp-bg-hover);
+  border-color: var(--dp-border);
+}
+
+.dp-nav-btn:focus-visible {
+  outline: 2px solid var(--dp-primary);
+  outline-offset: 1px;
+}
+
+/* ---- Weekday headers -------------------------------------- */
+.dp-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 8px 12px 4px;
+  gap: 2px;
+}
+
+.dp-weekday {
+  text-align: center;
+  font-size: var(--dp-font-size-sm);
+  font-weight: 600;
+  color: var(--dp-text-muted);
+  padding: 4px 0;
+}
+
+/* ---- Day grid --------------------------------------------- */
+.dp-grid {
+  padding: var(--dp-grid-padding);
+}
+
+.dp-week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+/* ---- Day cells -------------------------------------------- */
+.dp-day {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--dp-cell-radius);
+  font-size: var(--dp-font-size-sm);
+  font-family: var(--dp-font);
+  color: var(--dp-text);
+  transition: background-color 0.12s ease, color 0.12s ease;
+  outline: none;
+}
+
+.dp-day:hover:not(.dp-day--disabled):not(.dp-day--selected) {
+  background: var(--dp-bg-hover);
+}
+
+.dp-day:focus-visible {
+  outline: 2px solid var(--dp-primary);
+  outline-offset: 1px;
+}
+
+/* Today */
+.dp-day--today:not(.dp-day--selected) {
+  color: var(--dp-text-today);
+  font-weight: 700;
+}
+
+.dp-day--today:not(.dp-day--selected)::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--dp-text-today);
+  border-radius: 50%;
+}
+
+/* Selected */
+.dp-day--selected {
+  background: var(--dp-primary);
+  color: var(--dp-text-selected);
+  font-weight: 600;
+}
+
+.dp-day--selected:hover {
+  background: var(--dp-primary-hover);
+}
+
+/* Disabled */
+.dp-day--disabled {
+  color: var(--dp-text-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Other month */
+.dp-day--other-month {
+  color: var(--dp-text-other-month);
+}
+
+/* Range */
+.dp-day--in-range {
+  background: var(--dp-primary-light);
+  color: var(--dp-text-in-range);
+  border-radius: 0;
+}
+
+.dp-day--range-start {
+  background: var(--dp-primary);
+  color: var(--dp-text-selected);
+  border-radius: var(--dp-cell-radius) 0 0 var(--dp-cell-radius);
+}
+
+.dp-day--range-end {
+  background: var(--dp-primary);
+  color: var(--dp-text-selected);
+  border-radius: 0 var(--dp-cell-radius) var(--dp-cell-radius) 0;
+}
+
+[dir="rtl"] .dp-day--range-start {
+  border-radius: 0 var(--dp-cell-radius) var(--dp-cell-radius) 0;
+}
+
+[dir="rtl"] .dp-day--range-end {
+  border-radius: var(--dp-cell-radius) 0 0 var(--dp-cell-radius);
+}
+
+.dp-day--range-start.dp-day--range-end {
+  border-radius: var(--dp-cell-radius);
+}
+
+/* ---- Footer ----------------------------------------------- */
+.dp-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 12px 12px;
+  border-top: 1px solid var(--dp-border);
+}
+
+/* ---- Buttons (Today / Clear) ------------------------------ */
+.dp-btn {
+  padding: 5px 14px;
+  border: 1px solid var(--dp-border);
+  background: var(--dp-bg-btn);
+  border-radius: var(--dp-border-radius-sm);
+  cursor: pointer;
+  font-size: var(--dp-font-size-sm);
+  font-family: var(--dp-font);
+  color: var(--dp-text);
+  transition: background-color 0.12s ease;
+}
+
+.dp-btn:hover {
+  background: var(--dp-bg-hover);
+}
+
+.dp-btn:focus-visible {
+  outline: 2px solid var(--dp-primary);
+  outline-offset: 1px;
+}
+
+.dp-btn--today {
+  color: var(--dp-primary);
+  border-color: var(--dp-primary);
+}
+
+/* ---- Overlay (backdrop) ----------------------------------- */
+.dp-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--dp-z-index) - 1);
+  background: transparent;
+}
