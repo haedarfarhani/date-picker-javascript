@@ -22,7 +22,6 @@ export default defineConfig([
     outDir: 'dist',
     outExtension: () => ({ js: '.umd.js' }),
     target: 'es2020',
-    noExternal: ['my-datepicker-core'],
     minify: true,
   },
 ]);
