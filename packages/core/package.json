@@ -15,6 +15,9 @@
     "./styles.css": "./dist/datepicker.css"
   },
   "sideEffects": ["**/*.css"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
@@ -22,6 +25,15 @@
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["datepicker", "calendar", "jalali", "persian", "framework-agnostic"],
+  "description": "Framework-agnostic multi-calendar datepicker core with Jalali, Hijri, and Gregorian support.",
+  "keywords": ["datepicker", "calendar", "jalali", "persian", "hijri", "gregorian", "framework-agnostic", "smartdate"],
+  "homepage": "https://github.com/haedarfarhani/date-picker-javascript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haedarfarhani/date-picker-javascript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/haedarfarhani/date-picker-javascript/issues"
+  },
   "license": "MIT"
 }

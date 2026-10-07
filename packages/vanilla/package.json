@@ -1,5 +1,5 @@
 {
-  "name": "my-datepicker",
+  "name": "@haedarfarhanii/my-datepicker",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -15,17 +15,29 @@
     "./styles.css": "./dist/datepicker.css"
   },
   "sideEffects": ["**/*.css"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
+  "description": "Multi-calendar datepicker library with Jalali, Hijri, and Gregorian support. Vanilla JS / UMD entry.",
+  "keywords": ["datepicker", "vanilla", "umd", "jalali", "persian", "hijri", "gregorian", "framework-agnostic"],
+  "homepage": "https://github.com/haedarfarhani/date-picker-javascript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haedarfarhani/date-picker-javascript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/haedarfarhani/date-picker-javascript/issues"
+  },
+  "license": "MIT",
   "dependencies": {
-    "my-datepicker-core": "*"
+    "my-datepicker-core": "^1.0.0"
   },
   "devDependencies": {
     "tsup": "^8.0.0",
     "typescript": "^5.3.0"
-  },
-  "keywords": ["datepicker", "vanilla", "umd", "jalali", "persian", "framework-agnostic"],
-  "license": "MIT"
+  }
 }
