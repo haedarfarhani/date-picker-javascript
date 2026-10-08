@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Persian Datepicker v3 & SmartDate</title>
-  <meta name="description" content="Multi-calendar Datepicker library with unified SmartDate (Jalali, Hijri, Gregorian) engine, PHP-style formatting, and framework wrappers." />
+  <meta name="description" content="Multi-calendar Datepicker library with unified SmartDate (Jalali, Hijri, Gregorian) engine, modern token formatting, and framework wrappers for React, Vue, Angular, and Vanilla JS." />
   <meta property="og:title" content="Persian Datepicker v3 & SmartDate" />
-  <meta property="og:description" content="Multi-calendar Datepicker library with unified SmartDate (Jalali, Hijri, Gregorian) engine, PHP-style formatting, and framework wrappers." />
+  <meta property="og:description" content="Multi-calendar Datepicker library with unified SmartDate (Jalali, Hijri, Gregorian) engine, modern token formatting, and framework wrappers for React, Vue, Angular, and Vanilla JS." />
 
   <!-- Vazirmatn Persian Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,8 +16,9 @@
     rel="stylesheet"
   />
 
-  <!-- Datepicker Stylesheet -->
-  <link rel="stylesheet" href="/packages/core/styles/datepicker.css" />
+  <!-- Datepicker Stylesheets (Supports both relative root and package paths) -->
+  <link rel="stylesheet" href="./datepicker.bundle.css" />
+  <link rel="stylesheet" href="./packages/core/styles/datepicker.css" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -367,6 +368,118 @@
       text-align: left;
     }
 
+    /* Framework Showcase Tabs */
+    .framework-card {
+      background: #fff;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      margin-top: 18px;
+    }
+
+    .fw-tab-bar {
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .fw-tab-btn {
+      padding: 10px 20px;
+      border: 1.5px solid transparent;
+      border-radius: 10px;
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fw-tab-btn:hover {
+      background: #e2e8f0;
+      color: var(--primary-dark);
+    }
+
+    .fw-tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .fw-pane {
+      display: none;
+    }
+
+    .fw-pane.active {
+      display: block;
+      animation: fwFadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fwFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fw-code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .fw-code-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #1e293b;
+    }
+
+    .copy-btn {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      color: #334155;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .install-box {
+      background: #1e293b;
+      color: #38bdf8;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 0.88rem;
+      direction: ltr;
+      text-align: left;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #334155;
+    }
+
     footer {
       text-align: center;
       padding: 36px 20px;
@@ -524,14 +637,14 @@
 
   </div>
 
-  <!-- ==================== بخش دوم: محیط زنده تست SmartDate و PHP Formatter ==================== -->
-  <h2 class="section-title">🧪 محیط آزمایشی موتور SmartDate و فرمت PHP</h2>
-  <p class="section-desc">کلاس یکپارچه SmartDate قادر است به طور همزمان هر سه تقویم را محاسبه کرده و توکن‌های PHP را فرمت کند.</p>
+  <!-- ==================== بخش دوم: محیط زنده تست SmartDate و الگوهای فرمت‌دهی استاندارد ==================== -->
+  <h2 class="section-title">🧪 محیط آزمایشی موتور تاریخ SmartDate و الگوهای فرمت‌دهی</h2>
+  <p class="section-desc">کلاس یکپارچه SmartDate قادر است به طور همزمان هر سه تقویم (شمسی، میلادی، قمری) را بدون خطا محاسبه کرده و الگوهای استاندارد تاریخ را فرمت کند.</p>
 
   <div class="sandbox-panel">
     <div class="sandbox-grid">
       <div class="input-group">
-        <label>الگوی فرمت PHP (Pattern Tokens):</label>
+        <label>الگوی فرمت تاریخ (Format Pattern Tokens):</label>
         <input type="text" class="text-input" id="sb-pattern" value="l j F Y - H:i:s" />
       </div>
       <div class="input-group">
@@ -563,7 +676,7 @@
     </div>
 
     <div style="margin-top: 24px;">
-      <h4 style="margin: 0 0 8px; color: #334155;">جدول توکن‌های PHP در موتور SmartDateFormat:</h4>
+      <h4 style="margin: 0 0 8px; color: #334155;">جدول توکن‌های استاندارد فرمت‌دهی تاریخ در SmartDateFormat:</h4>
       <table class="token-table">
         <thead>
           <tr>
@@ -574,6 +687,7 @@
         </thead>
         <tbody>
           <tr><td>l</td><td>نام کامل روز هفته</td><td>شنبه / السبت / Saturday</td></tr>
+          <tr><td>D</td><td>نام مخفف روز هفته</td><td>ش / س / Sat</td></tr>
           <tr><td>j / d</td><td>روز ماه (بدون صفر / دو رقمی)</td><td>۱۴ / 14 / 05</td></tr>
           <tr><td>F / m</td><td>نام ماه / شماره ماه دو رقمی</td><td>مهر / October / 07</td></tr>
           <tr><td>Y / y</td><td>سال ۴ رقمی / سال ۲ رقمی</td><td>۱۴۰۳ / 03 / 2026</td></tr>
@@ -585,40 +699,233 @@
     </div>
   </div>
 
-  <!-- ==================== بخش سوم: نمونه کدهای فریم‌ورک‌ها ==================== -->
-  <h2 class="section-title">💻 استفاده آسان در فریم‌ورک‌ها</h2>
-  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;">
-    <div>
-      <h4 style="margin: 0 0 8px;">کامپوننت React:</h4>
-      <pre><code>import { DatePicker } from 'my-datepicker-react';
+  <!-- ==================== بخش سوم: نمونه کدهای کامل فریم‌ورک‌ها ==================== -->
+  <h2 class="section-title">💻 راهنمای پیاده‌سازی و نمونه‌کدها در فریم‌ورک‌ها</h2>
+  <p class="section-desc">کتابخانه به‌صورت ماژولار و Zero-Dependency توسعه داده شده و دارای رپرهای رسمی برای React، Vue 3، Angular و جاوا اسکریپت است.</p>
 
-export function App() {
-  const [val, setVal] = useState('1403/07/14');
+  <div class="framework-card">
+    <div class="fw-tab-bar" role="tablist">
+      <button class="fw-tab-btn active" data-target="tab-js">🟨 JavaScript (Vanilla)</button>
+      <button class="fw-tab-btn" data-target="tab-react">⚛️ React</button>
+      <button class="fw-tab-btn" data-target="tab-vue">💚 Vue 3</button>
+      <button class="fw-tab-btn" data-target="tab-angular">🅰️ Angular</button>
+    </div>
+
+    <!-- تب JavaScript -->
+    <div class="fw-pane active" id="tab-js">
+      <div class="install-box">
+        <span>$ npm install my-datepicker-core</span>
+        <button class="copy-btn" data-code="npm install my-datepicker-core">کپی دستور</button>
+      </div>
+      <div class="fw-code-header">
+        <span class="fw-code-title">نمونه کد جاوا اسکریپت مدرن (Vanilla JS):</span>
+        <button class="copy-btn" data-copy-target="code-js">📋 کپی کد</button>
+      </div>
+      <pre><code id="code-js">&lt;!-- ۱. فایل HTML --&gt;
+&lt;link rel="stylesheet" href="node_modules/my-datepicker-core/styles.css" /&gt;
+&lt;div id="datepicker"&gt;&lt;/div&gt;
+
+&lt;!-- ۲. اسکریپت جاوا اسکریپت --&gt;
+&lt;script type="module"&gt;
+  import { DatePicker, SmartDate } from 'my-datepicker-core';
+
+  // راه‌اندازی با تقویم شمسی و سوییچر تقویم
+  const dp = new DatePicker('#datepicker', {
+    calendar: 'jalali',       // 'jalali' | 'gregorian' | 'hijri'
+    calendarSwitcher: true,   // امکان تغییر مستقیم تقویم در هدر
+    mode: 'single',           // 'single' | 'range' | 'multiple'
+    value: new Date(),        // مقدار اولیه (امروز)
+    pattern: 'l j F Y',       // الگوی نمایش تاریخ
+    theme: 'light',           // 'light' | 'dark' | 'material' | 'ios' | 'glass'
+    design: 'rounded',        // 'default' | 'rounded' | 'minimal' | 'bordered'
+    placeholder: 'انتخاب تاریخ...',
+  });
+
+  // دریافت مقدار و گوش دادن به رویدادها
+  dp.on('change', ({ value, smartDate }) => {
+    console.log('تاریخ فرمت شده:', value);
+    console.log('آبجکت تاریخ شمسی:', smartDate.toJalali());
+  });
+
+  // تغییر تقویم یا مقدار با کد
+  // dp.switchCalendar('hijri');
+  // dp.setValue('1405/01/01');
+  // dp.clear();
+&lt;/script&gt;</code></pre>
+    </div>
+
+    <!-- تب React -->
+    <div class="fw-pane" id="tab-react">
+      <div class="install-box">
+        <span>$ npm install my-datepicker-react my-datepicker-core</span>
+        <button class="copy-btn" data-code="npm install my-datepicker-react my-datepicker-core">کپی دستور</button>
+      </div>
+      <div class="fw-code-header">
+        <span class="fw-code-title">کامپوننت کامل React (Hooks & TypeScript):</span>
+        <button class="copy-btn" data-copy-target="code-react">📋 کپی کد</button>
+      </div>
+      <pre><code id="code-react">import React, { useState } from 'react';
+import { DatePicker } from 'my-datepicker-react';
+import 'my-datepicker-core/styles.css';
+
+export function DateSelectorExample() {
+  const [selectedDate, setSelectedDate] = useState('1405/07/16');
+  const [dateRange, setDateRange] = useState&lt;string[]&gt;([]);
+
   return (
-    &lt;DatePicker
-      calendar="jalali"
-      calendarSwitcher={true}
-      theme="ios"
-      design="rounded"
-      mode="range"
-      pattern="l j F Y"
-      value={val}
-      onChange={(newVal) => setVal(newVal)}
-    /&gt;
+    &lt;div style={{ padding: '24px', direction: 'rtl' }}&gt;
+      {/* تقویم شمسی با قابلیت تعویض تقویم */}
+      &lt;div style={{ marginBottom: '24px' }}&gt;
+        &lt;label style={{ display: 'block', marginBottom: '8px', fontWeight: 600 }}&gt;
+          انتخاب تاریخ با سوییچر تقویم:
+        &lt;/label&gt;
+        &lt;DatePicker
+          calendar="jalali"
+          calendarSwitcher={true}
+          theme="light"
+          design="rounded"
+          pattern="l j F Y"
+          value={selectedDate}
+          onChange={(newVal) => setSelectedDate(newVal)}
+          onCalendarChange={(cal) => console.log('تقویم فعال شد:', cal)}
+        /&gt;
+        &lt;p style={{ color: '#4f46e5', marginTop: '6px' }}&gt;
+          مقدار انتخاب‌شده: {selectedDate || '—'}
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      {/* انتخاب بازه تاریخی (Range Picker) */}
+      &lt;div&gt;
+        &lt;label style={{ display: 'block', marginBottom: '8px', fontWeight: 600 }}&gt;
+          انتخاب بازه تاریخی (اقامت):
+        &lt;/label&gt;
+        &lt;DatePicker
+          calendar="jalali"
+          mode="range"
+          theme="ios"
+          pattern="Y/m/d"
+          placeholder="تاریخ رفت تا برگشت"
+          onChange={(range) => setDateRange(range)}
+        /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
   );
 }</code></pre>
     </div>
-    <div>
-      <h4 style="margin: 0 0 8px;">موتور SmartDate در TypeScript:</h4>
-      <pre><code>import { SmartDate } from 'my-datepicker-core';
 
-const sd = SmartDate.now();
-console.log(sd.getShYear()); // 1405
-console.log(sd.format('l j F Y')); // دوشنبه ۱۴ مهر ۱۴۰۵
-console.log(sd.toGregorian()); // [2026, 10, 6]
-console.log(sd.isLeap()); // false
-const nextMonth = sd.addMonths(1);</code></pre>
+    <!-- تب Vue 3 -->
+    <div class="fw-pane" id="tab-vue">
+      <div class="install-box">
+        <span>$ npm install my-datepicker-vue my-datepicker-core</span>
+        <button class="copy-btn" data-code="npm install my-datepicker-vue my-datepicker-core">کپی دستور</button>
+      </div>
+      <div class="fw-code-header">
+        <span class="fw-code-title">کامپوننت Vue 3 (Composition API & Script Setup):</span>
+        <button class="copy-btn" data-copy-target="code-vue">📋 کپی کد</button>
+      </div>
+      <pre><code id="code-vue">&lt;template&gt;
+  &lt;div class="picker-container" dir="rtl"&gt;
+    &lt;h3&gt;انتخاب تاریخ در Vue 3 با دوطرفه v-model&lt;/h3&gt;
+
+    &lt;!-- اتصال دوطرفه به متغیر با v-model --&gt;
+    &lt;DatePicker
+      v-model="bookingDate"
+      calendar="jalali"
+      :calendar-switcher="true"
+      theme="glass"
+      design="rounded"
+      pattern="l j F Y"
+      placeholder="انتخاب روز مورد نظر"
+      @change="handleChange"
+    /&gt;
+
+    &lt;div class="result"&gt;
+      مقدار انتخاب‌شده: &lt;strong&gt;{{ bookingDate || '—' }}&lt;/strong&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref } from 'vue';
+import { DatePicker } from 'my-datepicker-vue';
+import 'my-datepicker-core/styles.css';
+
+const bookingDate = ref('1405/07/16');
+
+function handleChange(val) {
+  console.log('تاریخ جدید:', val);
+}
+&lt;/script&gt;</code></pre>
     </div>
+
+    <!-- تب Angular -->
+    <div class="fw-pane" id="tab-angular">
+      <div class="install-box">
+        <span>$ npm install my-datepicker-core</span>
+        <button class="copy-btn" data-code="npm install my-datepicker-core">کپی دستور</button>
+      </div>
+      <div class="fw-code-header">
+        <span class="fw-code-title">کامپوننت استندالون Angular (سازگار با Reactive Forms):</span>
+        <button class="copy-btn" data-copy-target="code-angular">📋 کپی کد</button>
+      </div>
+      <pre><code id="code-angular">import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { DatePicker, DatePickerOptions } from 'my-datepicker-core';
+
+@Component({
+  selector: 'app-date-picker',
+  standalone: true,
+  imports: [FormsModule],
+  template: `
+    &lt;div class="dp-wrapper" dir="rtl"&gt;
+      &lt;div #container&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  `,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() =&gt; AppDatePickerComponent),
+      multi: true
+    }
+  ]
+})
+export class AppDatePickerComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
+  @ViewChild('container') containerRef!: ElementRef&lt;HTMLDivElement&gt;;
+  private picker!: DatePicker;
+  private onChange: (val: any) =&gt; void = () =&gt; {};
+  private onTouched: () =&gt; void = () =&gt; {};
+
+  ngAfterViewInit(): void {
+    this.picker = new DatePicker(this.containerRef.nativeElement, {
+      calendar: 'jalali',
+      calendarSwitcher: true,
+      pattern: 'l j F Y',
+      theme: 'material',
+      design: 'rounded'
+    });
+
+    this.picker.on('change', ({ value }) =&gt; {
+      this.onChange(value);
+      this.onTouched();
+    });
+  }
+
+  writeValue(value: any): void {
+    if (this.picker) {
+      if (value) this.picker.setValue(value);
+      else this.picker.clear();
+    }
+  }
+
+  registerOnChange(fn: any): void { this.onChange = fn; }
+  registerOnTouched(fn: any): void { this.onTouched = fn; }
+
+  ngOnDestroy(): void {
+    if (this.picker) this.picker.destroy();
+  }
+}</code></pre>
+    </div>
+
   </div>
 
 </main>
@@ -627,22 +934,49 @@ const nextMonth = sd.addMonths(1);</code></pre>
   کتابخانه Persian Datepicker v3 — Design System مدرن، Mobile-First و دسترس‌پذیر WAI-ARIA
 </footer>
 
-<!-- App Script -->
+<!-- Load Datepicker Bundle first for static hosting (GitHub Pages) and dev server -->
+<script src="./datepicker.bundle.js"></script>
+
+<!-- App Initialization Script -->
 <script type="module">
-  import { DatePicker, SmartDate, SmartDateFormat } from '/packages/core/src/index.ts';
-
-  // 1. Live banner clock
-  function updateLiveClock() {
-    const now = SmartDate.now();
-    document.getElementById('live-jalali').textContent = now.format('l j F Y', 'jalali');
-    document.getElementById('live-jalali-meta').textContent = `${now.format('H:i:s')} | کبیسه: ${now.isLeap('jalali') ? 'بله' : 'خیر'}`;
-
-    document.getElementById('live-gregorian').textContent = now.format('l, F j, Y', 'gregorian');
-    document.getElementById('live-gregorian-meta').textContent = `${now.format('H:i:s')} | Leap: ${now.grgIsLeap() ? 'Yes' : 'No'}`;
-
-    document.getElementById('live-hijri').textContent = now.format('l j F Y', 'hijri');
-    document.getElementById('live-hijri-meta').textContent = `Kuwaiti Tabular | ${now.format('H:i:s')}`;
+  // Load classes from global bundle or dynamic module
+  let DatePicker, SmartDate, SmartDateFormat;
+  if (window.MyDatepickerCore) {
+    DatePicker = window.MyDatepickerCore.DatePicker;
+    SmartDate = window.MyDatepickerCore.SmartDate;
+    SmartDateFormat = window.MyDatepickerCore.SmartDateFormat;
+  } else {
+    const mod = await import('./packages/core/src/index.ts');
+    DatePicker = mod.DatePicker;
+    SmartDate = mod.SmartDate;
+    SmartDateFormat = mod.SmartDateFormat;
   }
+
+  // 1. Live banner clock with real-time update
+  function updateLiveClock() {
+    try {
+      const now = SmartDate.now();
+      const jalaliEl = document.getElementById('live-jalali');
+      const jalaliMetaEl = document.getElementById('live-jalali-meta');
+      const grgEl = document.getElementById('live-gregorian');
+      const grgMetaEl = document.getElementById('live-gregorian-meta');
+      const hijriEl = document.getElementById('live-hijri');
+      const hijriMetaEl = document.getElementById('live-hijri-meta');
+
+      if (jalaliEl) jalaliEl.textContent = now.format('l j F Y', 'jalali');
+      if (jalaliMetaEl) jalaliMetaEl.textContent = `${now.format('H:i:s')} | کبیسه: ${now.isLeap('jalali') ? 'بله' : 'خیر'}`;
+
+      if (grgEl) grgEl.textContent = now.format('l, F j, Y', 'gregorian');
+      if (grgMetaEl) grgMetaEl.textContent = `${now.format('H:i:s')} | Leap: ${now.grgIsLeap() ? 'Yes' : 'No'}`;
+
+      if (hijriEl) hijriEl.textContent = now.format('l j F Y', 'hijri');
+      if (hijriMetaEl) hijriMetaEl.textContent = `تقویم قمری اسلامی | ${now.format('H:i:s')}`;
+    } catch (e) {
+      console.error('Error updating live clock:', e);
+    }
+  }
+
+  // Run immediately and setup 1s interval
   updateLiveClock();
   setInterval(updateLiveClock, 1000);
 
@@ -652,7 +986,7 @@ const nextMonth = sd.addMonths(1);</code></pre>
     calendarSwitcher: true,
     value: new Date(),
     pattern: 'l j F Y',
-    placeholder: 'انتخاب تاریخ',
+    placeholder: 'انتخاب تاریخ...',
   });
 
   const updateSwitcherDisplay = (val) => {
@@ -679,7 +1013,7 @@ const nextMonth = sd.addMonths(1);</code></pre>
     mode: 'range',
     calendar: 'jalali',
     pattern: 'Y/m/d',
-    placeholder: 'انتخاب بازه تاریخی',
+    placeholder: 'انتخاب بازه تاریخی...',
   });
   dpRange.on('change', ({ value }) => {
     document.getElementById('val-range').textContent = JSON.stringify(value);
@@ -690,7 +1024,7 @@ const nextMonth = sd.addMonths(1);</code></pre>
     mode: 'multiple',
     calendar: 'jalali',
     pattern: 'Y/m/d',
-    placeholder: 'انتخاب چند روز',
+    placeholder: 'انتخاب چند روز...',
   });
   dpMulti.on('change', ({ value }) => {
     document.getElementById('val-multi').textContent = JSON.stringify(value);
@@ -702,7 +1036,7 @@ const nextMonth = sd.addMonths(1);</code></pre>
     showTime: true,
     timeFormat: '24h',
     pattern: 'Y/m/d H:i',
-    placeholder: '۱۴۰۳/۰۷/۱۴ ۱۸:۳۰',
+    placeholder: '۱۴۰۵/۰۷/۱۶ ۱۸:۳۰',
   });
   dpDateTime.on('change', ({ value }) => {
     document.getElementById('val-datetime').textContent = JSON.stringify(value);
@@ -724,7 +1058,7 @@ const nextMonth = sd.addMonths(1);</code></pre>
     monthsCount: 2,
     mode: 'range',
     calendar: 'jalali',
-    placeholder: 'نمای ۲ ماهه',
+    placeholder: 'نمای ۲ ماهه...',
   });
   dpMultiMonth.on('change', ({ value }) => {
     document.getElementById('val-multimonth').textContent = JSON.stringify(value);
@@ -805,6 +1139,52 @@ const nextMonth = sd.addMonths(1);</code></pre>
   });
 
   refreshSandboxOutput();
+
+  // 11. Framework Tabs Navigation
+  document.querySelectorAll('.fw-tab-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.fw-tab-btn').forEach((b) => b.classList.remove('active'));
+      document.querySelectorAll('.fw-pane').forEach((p) => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      const targetId = btn.getAttribute('data-target');
+      const pane = document.getElementById(targetId);
+      if (pane) pane.classList.add('active');
+    });
+  });
+
+  // 12. Copy Code Buttons
+  document.querySelectorAll('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      let textToCopy = '';
+      const codeId = btn.getAttribute('data-copy-target');
+      const directCode = btn.getAttribute('data-code');
+
+      if (codeId) {
+        const el = document.getElementById(codeId);
+        if (el) textToCopy = el.textContent || '';
+      } else if (directCode) {
+        textToCopy = directCode;
+      }
+
+      if (textToCopy) {
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          const original = btn.textContent;
+          btn.textContent = 'کپی شد! ✓';
+          btn.style.background = '#10b981';
+          btn.style.color = '#fff';
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.style.background = '';
+            btn.style.color = '';
+          }, 2000);
+        } catch (err) {
+          console.error('Clipboard copy failed:', err);
+        }
+      }
+    });
+  });
 </script>
 
 </body>

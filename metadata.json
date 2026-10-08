@@ -1,4 +1,4 @@
 {
   "name": "Persian Datepicker v3 & SmartDate",
-  "description": "Multi-calendar Datepicker library with unified SmartDate (Jalali, Hijri, Gregorian) engine, PHP-style formatting, and framework wrappers."
+  "description": "Multi-calendar Datepicker library with unified SmartDate (Jalali, Hijri, Gregorian) engine, modern token formatting, and framework wrappers for React, Vue, Angular, and Vanilla JS."
 }

@@ -9,7 +9,8 @@
     href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="/packages/core/styles/datepicker.css" />
+  <link rel="stylesheet" href="./datepicker.bundle.css" />
+  <link rel="stylesheet" href="./packages/core/styles/datepicker.css" />
   <style>
     body {
       font-family: 'Vazirmatn', system-ui, sans-serif;
@@ -90,8 +91,15 @@
   </div>
 </div>
 
+<script src="./datepicker.bundle.js"></script>
 <script type="module">
-  import { DatePicker } from '/packages/core/src/index.ts';
+  let DatePicker;
+  if (window.MyDatepickerCore) {
+    DatePicker = window.MyDatepickerCore.DatePicker;
+  } else {
+    const mod = await import('./packages/core/src/index.ts');
+    DatePicker = mod.DatePicker;
+  }
 
   const dpJalali = new DatePicker('#dp-jalali', {
     calendar: 'jalali',

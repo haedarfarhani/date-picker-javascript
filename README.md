@@ -34,7 +34,7 @@
 - 🚀 **پیش‌نمایش آنلاین:** [https://haedarfarhani.github.io/date-picker-javascript/](https://haedarfarhani.github.io/date-picker-javascript/)
 - 📆 **سه تقویم همزمان:** تبدیل و نمایش بی‌نقص بین تقویم شمسی، میلادی و هجری قمری بدون افت دقت در سال‌های کبیسه.
 - 🔄 **سوییچر تقویم پویا (`calendarSwitcher`):** تعویض تقویم در حین باز بودن پنجره بدون بسته شدن ناگهانی یا از دست رفتن تاریخ انتخابی.
-- 📐 **موتور قدرتمند `SmartDate`:** قالب‌بندی و تبدیل تاریخ بر اساس توکن‌های سبک PHP (`Y/m/d`, `l j F Y`, `H:i:s`).
+- 📐 **موتور قدرتمند `SmartDate`:** قالب‌بندی و تبدیل تاریخ بر اساس الگوهای استاندارد فرمت‌دهی (`Y/m/d`, `l j F Y`, `H:i:s`).
 - 🎨 **۵ تم مدرن و ۵ طرح ساختاری:** تم‌های `light`، `dark`، `material`، `ios` و `glass` به همراه ساختارهای `default`، `rounded`، `minimal`، `bordered` و `compact`.
 - 📱 **پاسخ‌گوی موبایل (Mobile-First):** در صفحات موبایل به‌صورت خودکار به Bottom Sheet لمسی با اندازه سلول ۴۴px تبدیل می‌شود.
 - ♿ **دسترس‌پذیری کامل (WAI-ARIA):** پشتیبانی از کلیدهای جهت‌نما، مدیریت فوکوس، و سازگاری با صفحه‌خوان‌ها.
@@ -185,7 +185,7 @@ picker.destroy();
 
 ---
 
-### ۶. توکن‌های فرمت‌دهی موتور `SmartDate` (سبک PHP)
+### ۶. توکن‌های استاندارد فرمت‌دهی موتور `SmartDate`
 
 | توکن | توضیح | مثال در تقویم شمسی |
 | :---: | :--- | :--- |
@@ -208,60 +208,99 @@ picker.destroy();
 
 ---
 
-### ۷. استفاده در فریم‌ورک‌ها
+### ۷. نمونه‌کدهای پیاده‌سازی در فریم‌ورک‌ها
 
-#### در React:
+#### ۱) در جاوا اسکریپت خالص (Vanilla JavaScript):
+```html
+<link rel="stylesheet" href="node_modules/my-datepicker-core/styles.css" />
+<div id="calendar"></div>
+
+<script type="module">
+  import { DatePicker } from 'my-datepicker-core';
+
+  const dp = new DatePicker('#calendar', {
+    calendar: 'jalali',
+    calendarSwitcher: true,
+    mode: 'single',
+    value: new Date(),
+    pattern: 'l j F Y',
+    theme: 'light',
+    design: 'rounded'
+  });
+
+  dp.on('change', ({ value }) => console.log('تاریخ انتخاب شده:', value));
+</script>
+```
+
+#### ۲) در React (هوک‌ها و TypeScript):
 ```tsx
-import { DatePickerReact } from 'my-datepicker-react';
+import React, { useState } from 'react';
+import { DatePicker } from 'my-datepicker-react';
+import 'my-datepicker-core/styles.css';
 
-function MyComponent() {
+export function MyComponent() {
+  const [date, setDate] = useState('1405/07/16');
+
   return (
-    <DatePickerReact
+    <DatePicker
       calendar="jalali"
-      mode="range"
       calendarSwitcher={true}
+      mode="single"
+      pattern="l j F Y"
       theme="glass"
-      onChange={({ value }) => console.log('Range:', value)}
+      design="rounded"
+      value={date}
+      onChange={(newVal) => setDate(newVal)}
+      onCalendarChange={(cal) => console.log('تقویم فعال:', cal)}
     />
   );
 }
 ```
 
-#### در Vue 3:
+#### ۳) در Vue 3 (با ترکیب Composition API و v-model):
 ```vue
 <template>
-  <DatePickerVue
+  <DatePicker
     v-model="selectedDate"
     calendar="jalali"
     :calendar-switcher="true"
     theme="ios"
+    design="rounded"
+    pattern="l j F Y"
   />
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { DatePickerVue } from 'my-datepicker-vue';
+import { DatePicker } from 'my-datepicker-vue';
+import 'my-datepicker-core/styles.css';
 
-const selectedDate = ref('1403/07/15');
+const selectedDate = ref('1405/07/16');
 </script>
 ```
 
-#### در Angular:
+#### ۴) در Angular (سازگار با Forms و ngModel):
 ```typescript
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MyDatepickerAngular } from 'my-datepicker-angular';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MyDatepickerAngular],
+  imports: [FormsModule, MyDatepickerAngular],
   template: `
-    <my-datepicker-angular [(ngModel)]="currentDate" calendar="jalali" [calendarSwitcher]="true">
+    <my-datepicker-angular
+      [(ngModel)]="currentDate"
+      calendar="jalali"
+      [calendarSwitcher]="true"
+      theme="material"
+      design="rounded">
     </my-datepicker-angular>
   `
 })
 export class AppComponent {
-  currentDate = '1403/07/15';
+  currentDate = '1405/07/16';
 }
 ```
 
@@ -288,7 +327,7 @@ export class AppComponent {
 - 🚀 **Interactive Live Demo:** [https://haedarfarhani.github.io/date-picker-javascript/](https://haedarfarhani.github.io/date-picker-javascript/)
 - 📆 **Tri-Calendar Engine:** Seamless transitions between Jalali, Gregorian, and Hijri systems with accurate leap-year calculations.
 - 🔄 **Dynamic Calendar Switcher (`calendarSwitcher: true`):** Switch between calendar systems on-the-fly without the picker closing or losing selection state.
-- 📐 **Unified SmartDate Engine:** High-performance date math and PHP-style pattern formatting (`Y/m/d`, `l j F Y`, `H:i`).
+- 📐 **Unified SmartDate Engine:** High-performance date math and pattern formatting (`Y/m/d`, `l j F Y`, `H:i`).
 - 🎨 **5 UI Themes & 5 Design Variants:** `light`, `dark`, `material`, `ios`, and `glass` themes; `default`, `rounded`, `minimal`, `bordered`, and `compact` designs.
 - 📱 **Mobile Bottom Sheet:** Automatically transitions to a fluid bottom sheet with 44px touch targets on mobile viewports.
 - ♿ **WAI-ARIA Compliant:** Focus management, keyboard navigation, and live screen reader region announcements.
@@ -349,7 +388,7 @@ import 'my-datepicker-core/styles.css';
 | `calendar` | `'jalali' \| 'gregorian' \| 'hijri'` | `'gregorian'` | Base calendar system to display |
 | `mode` | `'single' \| 'range' \| 'multiple'` | `'single'` | Date selection mode |
 | `value` | `string \| string[] \| Date \| Date[]` | `null` | Initial date value(s) |
-| `pattern` | `string` | Auto | Date format pattern (PHP-style token syntax) |
+| `pattern` | `string` | Auto | Date format pattern (Standard token syntax) |
 | `calendarSwitcher`| `boolean` | `false` | Enable interactive calendar switcher buttons |
 | `theme` | `'light' \| 'dark' \| 'material' \| 'ios' \| 'glass'` | `'light'` | Color scheme and visual styling theme |
 | `design` | `'default' \| 'rounded' \| 'minimal' \| 'bordered' \| 'compact'` | `'default'` | Shape and container layout variant |
@@ -442,7 +481,7 @@ const unsubscribe = dp.on('change', ({ value, smartDate }) => {
 
 ---
 
-### 6. SmartDate Formatting Tokens (PHP-Style)
+### 6. Standard Formatting Tokens
 
 | Token | Description | Example (Gregorian) | Example (Jalali) |
 | :---: | :--- | :--- | :--- |
@@ -467,35 +506,98 @@ const unsubscribe = dp.on('change', ({ value, smartDate }) => {
 
 ### 7. Framework Integrations
 
-#### React
+#### 1) Vanilla JavaScript
+```html
+<link rel="stylesheet" href="node_modules/my-datepicker-core/styles.css" />
+<div id="datepicker"></div>
+
+<script type="module">
+  import { DatePicker } from 'my-datepicker-core';
+
+  const dp = new DatePicker('#datepicker', {
+    calendar: 'jalali',
+    calendarSwitcher: true,
+    mode: 'single',
+    value: new Date(),
+    pattern: 'l j F Y',
+    theme: 'light',
+    design: 'rounded'
+  });
+
+  dp.on('change', ({ value }) => console.log('Selected:', value));
+</script>
+```
+
+#### 2) React (TypeScript & Hooks)
 ```tsx
-import { DatePickerReact } from 'my-datepicker-react';
+import React, { useState } from 'react';
+import { DatePicker } from 'my-datepicker-react';
+import 'my-datepicker-core/styles.css';
 
 export function DateSelector() {
+  const [date, setDate] = useState('1405/07/16');
+
   return (
-    <DatePickerReact
+    <DatePicker
       calendar="jalali"
-      mode="range"
       calendarSwitcher={true}
+      mode="single"
       theme="glass"
-      onChange={({ value }) => console.log('Range:', value)}
+      design="rounded"
+      pattern="l j F Y"
+      value={date}
+      onChange={(val) => setDate(val)}
+      onCalendarChange={(cal) => console.log('Calendar switched:', cal)}
     />
   );
 }
 ```
 
-#### Vue 3
+#### 3) Vue 3 (Composition API & v-model)
 ```vue
 <template>
-  <DatePickerVue v-model="date" calendar="hijri" :calendar-switcher="true" />
+  <DatePicker
+    v-model="date"
+    calendar="jalali"
+    :calendar-switcher="true"
+    theme="ios"
+    design="rounded"
+    pattern="l j F Y"
+  />
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { DatePickerVue } from 'my-datepicker-vue';
+import { DatePicker } from 'my-datepicker-vue';
+import 'my-datepicker-core/styles.css';
 
-const date = ref('1447/03/15');
+const date = ref('1405/07/16');
 </script>
+```
+
+#### 4) Angular (Standalone Component & Reactive Forms)
+```typescript
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MyDatepickerAngular } from 'my-datepicker-angular';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [FormsModule, MyDatepickerAngular],
+  template: `
+    <my-datepicker-angular
+      [(ngModel)]="date"
+      calendar="jalali"
+      [calendarSwitcher]="true"
+      theme="material"
+      design="rounded">
+    </my-datepicker-angular>
+  `
+})
+export class AppComponent {
+  date = '1405/07/16';
+}
 ```
 
 ---
@@ -521,7 +623,7 @@ const date = ref('1447/03/15');
 - 🚀 **رابط التجربة المباشرة:** [https://haedarfarhani.github.io/date-picker-javascript/](https://haedarfarhani.github.io/date-picker-javascript/)
 - 🌙 **دعم دقيق للتقويم الهجري:** خوارزميات حسابية دقيقة متوافقة مع تقويم أم القرى وإمكانية تعديل الأيام (`hijriAdjustment`).
 - 🔄 **مبدل التقويمات التفاعلي (`calendarSwitcher`):** التبديل بين الهجري والميلادي والشمسي مباشرة من واجهة التقويم دون إغلاق النافذة المنبثقة أو فقدان القيمة.
-- 📐 **محرك التاريخ الذكي `SmartDate`:** تحويل التواريخ وحساب السنوات الكبيسة وتنسيق النصوص بنمط PHP (`Y/m/d`).
+- 📐 **محرك التاريخ الذكي `SmartDate`:** تحويل التواريخ وحساب السنوات الكبيسة وتنسيق النصوص بالقوالب القياسية (`Y/m/d`, `l j F Y`, `H:i:s`).
 - 🎨 **٥ سمات (Themes) و٥ تصاميم (Designs):** سمات `light`، `dark`، `material`، `ios`، و `glass` مع خيارات تصميم متعددة.
 - 📱 **واجهة مخصصة للهواتف:** تتحول النافذة تلقائياً في الشاشات الصغيرة إلى Bottom Sheet سهلة اللمس بمساحة 44px لكل يوم.
 - ♿ **دعم كامل للوصولية (WAI-ARIA):** التنقل السلس عبر لوحة المفاتيح وقارئات الشاشة ودعم اتجاه النص من اليمين لليسار (RTL).
@@ -665,7 +767,7 @@ dp.on('change', ({ value, smartDate }) => {
 
 ---
 
-### ٦. رموز تنسيق التواريخ (PHP-Style)
+### ٦. رموز تنسيق التواريخ القياسية (Format Tokens)
 
 | الرمز | الشرح | مثال (بالتقويم الهجري) |
 | :---: | :--- | :--- |
@@ -687,7 +789,103 @@ dp.on('change', ({ value, smartDate }) => {
 
 ---
 
-### ٧. التنقل عبر لوحة المفاتيح (Keyboard Navigation)
+### ٧. أمثلة التكامل مع أطر العمل (Frameworks)
+
+#### ١) جافاسكريبت القياسي (Vanilla JavaScript):
+```html
+<link rel="stylesheet" href="node_modules/my-datepicker-core/styles.css" />
+<div id="datepicker"></div>
+
+<script type="module">
+  import { DatePicker } from 'my-datepicker-core';
+
+  const dp = new DatePicker('#datepicker', {
+    calendar: 'hijri',
+    calendarSwitcher: true,
+    value: '1447/03/15',
+    pattern: 'l j F Y',
+    theme: 'light',
+    design: 'rounded'
+  });
+
+  dp.on('change', ({ value }) => console.log('التاريخ المختار:', value));
+</script>
+```
+
+#### ٢) ريآكت (React مع Hooks و TypeScript):
+```tsx
+import React, { useState } from 'react';
+import { DatePicker } from 'my-datepicker-react';
+import 'my-datepicker-core/styles.css';
+
+export function HijriPickerExample() {
+  const [date, setDate] = useState('1447/03/15');
+
+  return (
+    <DatePicker
+      calendar="hijri"
+      calendarSwitcher={true}
+      mode="single"
+      theme="glass"
+      design="rounded"
+      pattern="l j F Y"
+      value={date}
+      onChange={(newVal) => setDate(newVal)}
+    />
+  );
+}
+```
+
+#### ٣) فيو (Vue 3 مع v-model):
+```vue
+<template>
+  <DatePicker
+    v-model="hijriDate"
+    calendar="hijri"
+    :calendar-switcher="true"
+    theme="ios"
+    design="rounded"
+    pattern="l j F Y"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { DatePicker } from 'my-datepicker-vue';
+import 'my-datepicker-core/styles.css';
+
+const hijriDate = ref('1447/03/15');
+</script>
+```
+
+#### ٤) أنجولار (Angular Standalone Component):
+```typescript
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MyDatepickerAngular } from 'my-datepicker-angular';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [FormsModule, MyDatepickerAngular],
+  template: `
+    <my-datepicker-angular
+      [(ngModel)]="selectedDate"
+      calendar="hijri"
+      [calendarSwitcher]="true"
+      theme="material"
+      design="rounded">
+    </my-datepicker-angular>
+  `
+})
+export class AppComponent {
+  selectedDate = '1447/03/15';
+}
+```
+
+---
+
+### ٨. التنقل عبر لوحة المفاتيح (Keyboard Navigation)
 - `ArrowRight` / `ArrowLeft`: التنقل بين الأيام (مع مراعاة الاتجاه الطبيعي في العربية).
 - `ArrowUp` / `ArrowDown`: الانتقال أسبوعاً للأمام أو للخلف.
 - `PageUp` / `PageDown`: الانتقال للشهر السابق أو التالي.

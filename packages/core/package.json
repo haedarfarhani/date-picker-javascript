@@ -19,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && cp -f styles/datepicker.css dist/datepicker.css",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src --ext .ts",

@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3000",
-    "build": "npm run build --workspaces",
+    "build": "npm run build --workspaces && cp -f packages/core/dist/index.global.js datepicker.bundle.js && cp -f packages/core/styles/datepicker.css datepicker.bundle.css",
     "test": "vitest run",
     "lint": "eslint packages/*/src --ext .ts,.tsx",
     "typecheck": "npm run typecheck --workspaces"
